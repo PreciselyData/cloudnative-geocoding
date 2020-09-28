@@ -1,0 +1,21 @@
+image:
+  repository: directxman12/k8s-prometheus-adapter-amd64
+  tag: v0.6.0
+  pullPolicy: IfNotPresent
+
+# Url to access prometheus
+prometheus:
+  url: http://prometheus-server.default.svc.cluster.local
+  port: 80
+
+rules:
+  default: true
+  existing:
+  external: 
+  - seriesQuery: '{__name__="nginx_ingress_controller_nginx_process_connections"}'
+    resources:
+      template: <<.Resource>>
+    name:
+      matches: ""
+      as: "nginx_active_connections"
+    metricsQuery: sum(nginx_ingress_controller_nginx_process_connections{state="active"})

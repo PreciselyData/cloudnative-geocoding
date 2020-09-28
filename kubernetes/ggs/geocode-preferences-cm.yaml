@@ -1,0 +1,151 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ggs-preferences
+  labels:
+    app: ggs
+data:
+  geocodePreferences.xml : |
+    <geocodePreferences>
+        <!--*** To set system wide preferences, uncomment the appropriate lines and insert the desired default value -->
+        <!--*** Please see GGS documentation for more detailed information about preferences and their impact. -->
+        <!--*** Documentation: https://www.pitneybowes.com/us/support/products/software/geocoding-support.html -->
+        <!--
+            matchMode - Match modes determine the leniency used to make a match
+            between the input address and the reference data. Select a match
+            mode based on the quality of your input and your desired output.
+            Default: STANDARD
+            Available Values:
+            - STANDARD
+              - (Default) Requires a close match and generates a moderate number of match candidates.
+            - EXACT
+              - Requires a very tight match.
+            - RELAXED
+              - Allows a loose match and generates the most match candidates.
+            - INTERACTIVE
+              - (USA Only) Available in single-line address matching only. This mode is designed to better handle
+                the specific  matching challenges presented by interactive matching.
+            - CASS
+              - (USA only) Imposes additional rules to ensure compliance with the USPS CASS regulations.
+        -->
+        <!-- <matchMode>STANDARD</matchMode> -->
+        <!--reverseGeocodeSearchDistance - Sets the radius in which the Reverse Geocode service searches for a
+            match to the input coordinates.
+            Default: 150
+        -->
+        <!-- <reverseGeocodeSearchDistance>150</reverseGeocodeSearchDistance> -->
+        <!--
+            reverseGeocodeSearchDistanceUnits - Specifies the unit of measurement for the search distance.
+            Default: METER
+            Available Values:
+            - FEET
+            - METERS
+            - MILES
+            - KILOMETERS
+        -->
+        <!-- <reverseGeocodeSearchDistanceUnits>METER</reverseGeocodeSearchDistanceUnits> -->
+        <!--
+            fallbackToPostalCentroidOnNoStreetCloseMatch - Specifies whether to attempt to determine a post code centroid
+            when an address-level geocode cannot be determined
+            Default: true
+            Available Values:
+            - true
+            - false
+        -->
+        <!-- <fallbackToPostalCentroidOnNoStreetCloseMatch>true</fallbackToPostalCentroidOnNoStreetCloseMatch> -->
+        <!--
+            fallbackToGeographicCentroidOnNoStreetCloseMatch - Specifies whether to attempt to determine a geographic region
+            centroid when an address-level geocode cannot be determined.
+            Default: true
+            Available Values:
+            - true
+            - false
+        -->
+        <!-- <fallbackToGeographicCentroidOnNoStreetCloseMatch>true</fallbackToGeographicCentroidOnNoStreetCloseMatch> -->
+        <!--
+            returnAllAvailableCustomFields - return all custom fields for the candidate
+            Default: false
+            Available Values:
+            - true (will add overhead and might hinder performance)
+            - false
+         -->
+        <returnAllAvailableCustomFields>true</returnAllAvailableCustomFields>
+        <!--
+            returnAllCandidateInfo - returns all available information for the candidate
+            Default: false
+            Available Values:
+            - true (will add overhead and might hinder performance)
+            - false
+        -->
+        <returnAllCandidateInfo>false</returnAllCandidateInfo>
+        <!--
+            returnedCustomFieldKey - Specifies a list of keys that represent the custom fields to be
+            returned in the candidate's customFields output. For example: "PB_KEY".
+            Note: This preference is not necessary if "returnAllCandidateInfo" or "returnAllAvailableCustomFields"
+            is "true". Also, to specify multiple keys create multiple xml tags for "<returnedCustomFieldKey/>"
+        -->
+        <!--<returnedCustomFieldKey>PB_KEY</returnedCustomFieldKey>-->
+        <!--
+            streetOffset - Indicates the offset distance from the street segments to use in street-level geocoding.
+            Default: 7
+        -->
+        <!-- <streetOffset>7</streetOffset> -->
+        <!--
+            streetOffsetUnits - Specifies the unit of measurement for the street offset.
+            Default: METERS
+            Available Values:
+            - FEET
+            - METERS
+            - MILES
+            - KILOMETERS
+        -->
+        <!-- <streetOffsetUnits>METERS</streetOffsetUnits> -->
+        <!--
+            cornerOffset - Specifies the distance to offset the street end points in street-level matching.
+            Default: 7
+        -->
+        <!-- <cornerOffset>7</cornerOffset> -->
+        <!--
+            cornerOffsetUnits - Specifies the unit of measurement for the corner offset.
+            Default: METERS
+            Available Values:
+            - FEET
+            - METERS
+            - MILES
+            - KILOMETERS
+        -->
+        <!-- <cornerOffsetUnits>METERS</cornerOffsetUnits> -->
+        <!-- ********************************INFREQUENTLY USED PREFERENCES BELOW *************************************** -->
+        <!--
+            customKeyValuePair - Specifies list of key value pairs for custom preferences. Please see documentation for
+            full list of "customPreferences"
+        -->
+        <customKeyValuePair>FALLBACK_TO_WORLD=true</customKeyValuePair>
+        <!--
+            returnedPointCoordinateSystem - Specifies the coordinate system that you want to convert the
+            geometry to.
+            Note: Specify the coordinate reference system in the format codespace:code, eg WGS84 is
+            represented as epsg:4326
+            Default: epsg:4326
+        -->
+        <!-- <returnedPointCoordinateSystem>epsg:4326</returnedPointCoordinateSystem> -->
+        <!--
+            clientLocale - This field is used for a country that has multiple languages to determine the preferred order
+            of language candidates. The locale must be specified in the format "cc_CC", where "cc" is the language and "CC"
+            is the ISO 3166-1 Alpha-2 code, such as: en-US, fr_CA or fr_FR.
+        -->
+        <!-- <clientLocale>en_US</clientLocale> -->
+        <!--
+            maxCandidateRangesToReturn - Specifies maximum number of ranges returned for a candidate
+            Default: 1
+        -->
+        <!-- <maxCandidateRangesToReturn>1</maxCandidateRangesToReturn> -->
+        <!--
+            maxCandidateRangeUnitsToReturn - Specifies maximum number of units returned for a range
+            Default: 1
+        -->
+        <!-- <maxCandidateRangeUnitsToReturn>1</maxCandidateRangeUnitsToReturn> -->
+        <!-- *********************************************************************************************************** -->
+        <!-- *** NOTE mustMatch values (fieldsMatching) is not currently supported in geocodePreferences.xml -->
+    </geocodePreferences>

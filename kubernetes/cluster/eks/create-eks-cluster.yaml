@@ -1,0 +1,65 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: ggs-sample
+  region: us-east-1 
+  
+availabilityZones: ["us-east-1d", "us-east-1f"] 
+      
+managedNodeGroups:
+  - name: "ggs-sample-worker"
+    instanceType: "m5.2xlarge"
+    iam:
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        - arn:aws:iam::aws:policy/AutoScalingFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess        
+      withAddonPolicies:
+        externalDNS: true
+        certManager: true
+        imageBuilder: true
+        ebs: true
+        fsx: true
+        efs: true
+        appMesh: true
+        xRay: true
+        autoScaler: true
+        albIngress: true
+        cloudWatch: true        
+    minSize: 1
+    maxSize: 10
+    volumeSize: 200
+    labels: { node-app: "ggs" }
+    tags:
+      CreatedBy: "Precisely"
+      
+  - name: "ggs-sample-ingress"
+    instanceType: "m5.xlarge"
+    iam:
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        - arn:aws:iam::aws:policy/AutoScalingFullAccess      
+      withAddonPolicies:
+        externalDNS: true
+        certManager: true
+        imageBuilder: true
+        ebs: true
+        fsx: true
+        efs: true
+        appMesh: true
+        xRay: true
+        autoScaler: true
+        albIngress: true
+        cloudWatch: true 
+    desiredCapacity: 1
+    labels: { node-app: "ingress" }
+    volumeSize: 50
+    tags:
+      CreatedBy: "Precisely"

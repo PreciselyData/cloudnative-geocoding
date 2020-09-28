@@ -1,0 +1,16 @@
+## nginx configuration
+## Ref: https://github.com/kubernetes/ingress/blob/master/controllers/nginx/configuration.md
+##
+controller:
+  metrics:
+    port: 10254
+    # if this port is changed, change healthz-port: in extraArgs: accordingly
+    enabled: true
+
+    service:
+      annotations: 
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "10254"
+
+  nodeSelector: 
+    node-app: ingress

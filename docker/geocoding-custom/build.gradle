@@ -1,0 +1,90 @@
+import static groovy.io.FileType.FILES
+
+plugins {
+	id 'com.google.cloud.tools.jib' version '2.5.0'
+	id 'java'
+	id "org.springframework.boot" version "${springBootVersion}"
+}
+
+version = '1.0.0'
+def ggs_version = getGGSVersion()
+
+repositories {
+	maven {
+		url "file://${projectDir}/src/main/jib/var/lib/ggs/sdk/repository"
+	}
+	mavenCentral()
+}
+
+wrapper {
+	gradleVersion = "6.4.1"
+}
+
+jib.container.creationTime= 'USE_CURRENT_TIMESTAMP'
+
+dependencies {
+	implementation "com.pb.geocoding:geocoding-api:$ggs_version"
+	implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+
+	testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
+}
+
+def environmentSettings = ["ggs.resources.location": "$projectDir/src/main/jib/var/lib/ggs/resources",
+						   "ggs.data.location"     : "$projectDir/data"]
+
+bootRun {
+	dependsOn 'extractGGSDist', 'checkDataExists'
+	environment += environmentSettings
+}
+
+task checkDataExists(){
+	doLast {
+		def dataDir = new File("$projectDir/data")
+		if(! dataDir.exists() || !dataDir.isDirectory() || dataDir.list().length == 0) {
+			throw  new GradleException("No data found to run Interactive Geocoding application. $projectDir/data directory must conatins .spd files.")
+		}
+
+		boolean hasSpd =  false
+		dataDir.eachFileRecurse(FILES) {
+			if(it.name.endsWith('.spd')) {
+				hasSpd = true
+			}
+		}
+		if(!hasSpd){
+			throw  new GradleException("No data found to run Interactive Geocoding application. $projectDir/data directory must conatins .spd files.")
+		}
+	}
+}
+
+task extractGGSDist(){
+	doFirst {
+		copy {
+			from project.zipTree("lib/ggs-dist-${ggs_version}.zip")
+			into "$projectDir/src/main/jib/var/lib/ggs"
+		}
+	}
+}
+
+def getGGSVersion() {
+	def prefix = "ggs-dist-"
+	def suffix = ".zip"
+
+	def files = new File("$projectDir/lib").listFiles({ File dir, String name ->
+		return name.startsWith(prefix) && name.endsWith(suffix)
+	} as FilenameFilter)
+
+	if (files.length != 1) {
+		throw new GradleException("Expected one ggs-dist zip in /lib, found " + files.length)
+	}
+
+	files[0].name.substring(prefix.length(), files[0].name.length() - suffix.length())
+}
+
+jibDockerBuild.dependsOn 'extractGGSDist'
+compileJava.dependsOn 'extractGGSDist'
+
+test {
+	dependsOn 'checkDataExists'
+	environment += environmentSettings
+}
