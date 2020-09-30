@@ -19,17 +19,18 @@ The image can be pushed to and stored in a cloud registry. Depending on the regi
 The geocoding Docker sample contains a [Dockerfile](Dockerfile) along with startup script ([deploy-ggs.sh](deploy-ggs.sh)).
 
 1. If you haven't already, clone or download this repository to your computer. 
-2. Build & push the Docker image by executing the following command from the `<sample-directory>/docker/geocoding/ggs` directory, where: 
+2. Extract Spectrum Global Geocoding SDK (GGS) distribution's zip in `<sample-directory>/docker/geocoding/ggs` directory.
+3. Build & push the Docker image by executing the following command from the `<sample-directory>/docker/geocoding` directory, where: 
    - `-t [IMAGE]` - image name or ID, and optionally a tag in the ‘name:tag’ format
 	  
    ```
    docker build -t [IMAGE] .
    ```
-3. Verify the image built successfully and is stored in the local repository. Your image should be listed after executing the following command:
+4. Verify the image built successfully and is stored in the local repository. Your image should be listed after executing the following command:
    ```
    docker image ls
    ```
-4. Push the image to the remote repository:
+5. Push the image to the remote repository:
        
    #### Amazon ECR
    Use one of the following methods to push your image to your remote repository. We’ve provided some example steps but you can refer to the [Amazon documentation](https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html) for additional support.
