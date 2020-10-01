@@ -30,8 +30,10 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
 }
 
-def environmentSettings = ["ggs.resources.location": "$projectDir/src/main/jib/var/lib/ggs/resources",
-						   "ggs.data.location"     : "$projectDir/data"]
+def environmentSettings = [
+		"ggs.resources.location": "$projectDir/src/main/jib/var/lib/ggs/resources",
+		"ggs.data.location"     : "$projectDir/data"
+]
 
 bootRun {
 	dependsOn 'extractGGSDist', 'checkDataExists'
