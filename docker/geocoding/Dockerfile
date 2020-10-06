@@ -31,6 +31,8 @@ RUN dos2unix /usr/local/ggs/deploy-ggs.sh
 RUN chmod 755 /usr/local/ggs/deploy-ggs.sh
 RUN chmod 755 /usr/local/ggs/cli/cli.sh
 
+RUN /usr/local/ggs/cli/cli.sh deploy --c /usr/local/ggs/resources --d $CATALINA_HOME/webapps/geocode --l $CATALINA_HOME/logs/ --m WAR_EXTRACTED
+
 CMD ["/usr/local/ggs/deploy-ggs.sh"]
 
 

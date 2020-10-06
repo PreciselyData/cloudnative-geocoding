@@ -4,7 +4,7 @@
 GGS_HOME="${0%/*}"
 
 ### Available CPUs for container
-CPUs=$(nproc) 
+CPUs=1 
 ### Overrite it with user's input, if user set it
 if [[ ! -z "$POD_CPU_LIMIT" ]] && (($(echo $POD_CPU_LIMIT '>' 0|bc))); then
       CPUs=$POD_CPU_LIMIT
@@ -36,7 +36,6 @@ fi
 (cd $GGS_HOME/cli; sh ./cli.sh setting --d $GGS_HOME/resources/config --t USA --n REMOTE --v $remote)
 (cd $GGS_HOME/cli; sh ./cli.sh setting --d $GGS_HOME/resources/config --t USA --n POOL_MAX_ACTIVE --v $maxPoolActive)
  echo "Deploying the Geocoding application with settings: [REMOTE:$remote, POOL_MAX_ACTIVE:$maxPoolActive]"
-(cd $GGS_HOME/cli; sh ./cli.sh deploy --c $GGS_HOME/resources --d $CATALINA_HOME/webapps/geocode --l $CATALINA_HOME/logs/ --m WAR_EXTRACTED)
 
 # Need to start tomcat because we overrode the tomcat startup CMD in our dockerfile
 catalina.sh run
