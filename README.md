@@ -24,6 +24,7 @@ The Spectrum Global Geocoding SDK (GGS) provides the following capabilities, whi
 -  **Key Lookup Service** - returns geocoded candidates when given a unique key. It is a more efficient method than matching with an address, as the key is unique to that address. Spectrum Global Geocoding supports the PreciselyID unique identifier for US data and the G-NAF key for Australian data.
 
 **Note**: The sample requires using Spectrum Global Geocoding SDK (GGS) version 3.1.71 or above.
+
 ## Features
 -   Options that allow control of the searching and matching options, output results, and other preferences
 -   Highly configurable cluster using declarative configuration files
