@@ -30,6 +30,8 @@ The sample geocoding application requires a Kubernetes cluster with at least one
 Add the required Helm chart repositories. These repositories will be used to deploy components in the cluster:
 ```
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add stable https://charts.helm.sh/stable
 
 ```
 ## Deploy the NGINX Ingress Controller and Prometheus-Adapter with Prometheus
