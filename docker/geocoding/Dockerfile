@@ -13,20 +13,19 @@ RUN dos2unix /usr/local/ggs/deploy-ggs.sh \
 FROM tomcat:8.5-alpine
 MAINTAINER Precisely
 
-## Install AWS CLI and dos2unix
+## Install AWS CLI
 RUN apk update -q \
     && apk add --update \
-   	    dos2unix \
 		python \
 		py-pip \
 		parallel \
-    && pip install --upgrade pyasn1-modules awscli 
+	&& pip install --upgrade pip pyasn1-modules \	
+    && pip install awscli 
 
 ## Install gsutil CLI	
 RUN apk add --update \
        py-cffi \
        py-cryptography \
-    && pip install --upgrade pip \
     && apk add --virtual build-deps \
        gcc \
        libffi-dev \
