@@ -13,32 +13,31 @@ data:
    import os
    import sys   
    
-   account=sys.argv[1]
-   container=sys.argv[2]
-   key=sys.argv[3]
+   account=os.getenv('STORAGE_ACCOUNT')
+   container=os.getenv('STORAGE_CONTAINER')
+   accountKey=os.getenv('STORAGE_ACCOUNT_KEY')
    
    sas_token = generate_container_sas(        
         account_name=account,
         container_name=container,
-        account_key=key,
+        account_key=accountKey,
         permission=ContainerSasPermissions(read=True),
         expiry=datetime.utcnow() + timedelta(hours=1)
-    )
-    
-   print(sas_token)
-    
+   )    
+   print(sas_token)    
   install.sh: |
     #!/bin/bash
 
+    DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
     ## Generate SAS Token from storage account key, 
-    ## If you already have a SAS Token than set it directly
-    SAS_TOKEN=$(python3 generate_sas_token.py $STORAGE_ACCOUNT $STORAGE_CONTAINER $STORAGE_ACCOUNT_KEY)
-
+    ## If you already have a SAS Token than set it directly    
+    SAS_TOKEN="$(python3 "${DIR}"/generate_sas_token.py)"
+    
     rm -rf $GGS_DATA/*
     LOCAL_ZIP_DIR=/usr/local/ggs/ggs-zip
     mkdir -p $LOCAL_ZIP_DIR
     # copy spds locally
-    cat $SPD_LIST/spd.list | xargs -I spd azcopy copy spd$SAS_TOKEN $LOCAL_ZIP_DIR
+    cat $SPD_LIST/spd.list | xargs -I spd azcopy copy spd?$SAS_TOKEN $LOCAL_ZIP_DIR
 
     # create destination directory and extract datasets
     mkdir -p $GGS_DATA
