@@ -8,20 +8,19 @@ metadata:
 data:
   generate_sas_token.py: |
    from datetime import datetime, timedelta
-   from azure.storage.blob import BlobServiceClient, generate_account_sas, ResourceTypes, ContainerSasPermissions,generate_container_sas
+   from azure.storage.blob import BlobServiceClient, generate_account_sas, ResourceTypes, AccountSasPermissions
    from azure.storage.blob import BlobClient
    import os
    import sys   
    
    account=os.getenv('STORAGE_ACCOUNT')
-   container=os.getenv('STORAGE_CONTAINER')
    accountKey=os.getenv('STORAGE_ACCOUNT_KEY')
    
-   sas_token = generate_container_sas(        
+   sas_token = generate_account_sas(        
         account_name=account,
-        container_name=container,
         account_key=accountKey,
-        permission=ContainerSasPermissions(read=True),
+        resource_types=ResourceTypes(object=True),
+        permission=AccountSasPermissions(read=True),
         expiry=datetime.utcnow() + timedelta(hours=1)
    )    
    print(sas_token)    
@@ -31,7 +30,7 @@ data:
     DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
     ## Generate SAS Token from storage account key, 
     ## If you already have a SAS Token than set it directly    
-    SAS_TOKEN="$(python3 "${DIR}"/generate_sas_token.py)"
+    SAS_TOKEN="$(python "${DIR}"/generate_sas_token.py)"
     
     rm -rf $GGS_DATA/*
     LOCAL_ZIP_DIR=/usr/local/ggs/ggs-zip
@@ -42,7 +41,7 @@ data:
     # create destination directory and extract datasets
     mkdir -p $GGS_DATA
     cd /usr/local/ggs/cli
-    sh ./cli.sh extract  --s $LOCAL_ZIP_DIR --d $GGS_DATA
+    sh ./cli.sh extract  --s $LOCAL_ZIP_DIR --d $GGS_DATA --t
 
     # clean up
     rm -rf $LOCAL_ZIP_DIR

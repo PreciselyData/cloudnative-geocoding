@@ -54,11 +54,6 @@ spec:
             secretKeyRef:
               name: azure-storage-secret
               key: azurestorageaccountname
-        - name: STORAGE_CONTAINER
-          valueFrom:
-            secretKeyRef:
-              name: azure-storage-secret
-              key: azurestoragecontainer
         - name: STORAGE_ACCOUNT_KEY
           valueFrom:
             secretKeyRef:
