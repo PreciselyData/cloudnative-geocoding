@@ -22,32 +22,32 @@ MAINTAINER Precisely
 ## Install AWS CLI
 RUN apk update -q \
     && apk add --update \
-		python3 \
-		py3-pip \
+		python \
+		py-pip \
 		parallel \
-	&& pip3 install --upgrade pip pyasn1-modules \	
-    && pip3 install awscli 
+	&& pip install --upgrade pip pyasn1-modules \	
+    && pip install awscli 
 
 ## Install gsutil CLI	
 RUN apk add --update \
        libc6-compat \
 	   ca-certificates \
-       py3-cffi \
-       py3-cryptography \
+       py-cffi \
+       py-cryptography \
     && apk add --virtual build-deps \
        gcc \
        libffi-dev \
-       python3-dev \
+       python-dev \
        linux-headers \
        musl-dev \
        openssl-dev \
-    && pip3 install gsutil \
+    && pip install gsutil \
     && apk del build-deps \
     && apk add --upgrade bc \
     && rm -rf /var/cache/apk/* 
 
 ## Install Azure's azure-storage-blob python API to generate Azure SAS token	
-RUN pip3 install azure-storage-blob
+RUN pip install azure-storage-blob 
 	
 ## Copy configured ggs libraries and azcopy cli from build stage
 COPY --from=build /usr/local/ggs /usr/local/ggs
