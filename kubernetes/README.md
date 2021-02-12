@@ -186,7 +186,8 @@ This is the simplest approach to deploy the Geocoding application. During startu
 Steps to deploy:
 
   1. Add the Geocoding application Docker image URI.
-     In the `./ggs/local-data/ggs-runtime.yaml` file, replace:
+     
+     For `Google GKE` or `Amazon EKS` use `./ggs/local-data/ggs-runtime.yaml` file, but for `Microsoft AKS` use `./ggs/local-data/aks/ggs-runtime.yaml` file. In the file, replace:
      - `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the Docker repository in the `image` parameter. The `@IMAGE_URI@` parameter needs to be replaced in two places.
       ```
           initContainers:
@@ -212,13 +213,16 @@ This approach minimizes pod startup time by preparing the reference data ahead o
   2. Deploy the geocoding application using the data from the persistent volume.
 
  #### 1. Configure the persistent volume with reference data
- This sample demonstrates configuring a persistent volume backed by high performance cloud based file storage.  Though the steps outlined are written for specific products (Amazon EFS, Google Filestore), the process is generally applicable for other persistent volume types. Follow the steps below based on your platform.
+ This sample demonstrates configuring a persistent volume backed by high performance cloud based file storage.  Though the steps outlined are written for specific products (`Amazon EFS`, `Google Filestore`, `Azure Files`), the process is generally applicable for other persistent volume types. Follow the steps below based on your platform.
  ##### Amazon EKS
  >To deploy the geocoding reference data using [Amazon Elastic File System](https://aws.amazon.com/efs/), follow the instructions in [AmazonEKSReferenceData.md](./ggs/nfs-data/AmazonEKSReferenceData.md). 
  ##### Google GKE
  >To deploy the geocoding reference data on [Google Filestore](https://cloud.google.com/filestore), follow the instructions in [GoogleGKEReferenceData.md](./ggs/nfs-data/GoogleGKEReferenceData.md).
- 
- #### 2. Deploy the geocoding application using the data from the persistent volume
+##### Microsoft AKS
+>To deploy the geocoding reference data using [Microsoft Azure Files](https://azure.microsoft.com/en-in/services/storage/files/), follow the instructions in [MicrosoftAKSReferenceData.md](./ggs/nfs-data/MicrosoftAKSReferenceData.md).
+
+
+#### 2. Deploy the geocoding application using the data from the persistent volume
 The Geocoding application uses the same persistent volume where you deployed the reference data in the previous step. 
  To deploy the application:
  
@@ -229,12 +233,16 @@ The Geocoding application uses the same persistent volume where you deployed the
       ```
       kubectl apply -f ./ggs/nfs-data/eks/ggs-data-pv.yaml
       ```
-      ##### Google GKE
+     ##### Google GKE
       ```
       kubectl apply -f ./ggs/nfs-data/gke/ggs-data-pv.yaml
       ```
-   
-   - In the `./ggs/nfs-data/ggs-runtime.yaml` file, replace:
+     ##### Microsoft AKS
+      ```
+      kubectl apply -f ./ggs/nfs-data/aks/ggs-data-pv.yaml
+      ```
+
+      - In the `./ggs/nfs-data/ggs-runtime.yaml` file, replace:
       -  `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the Docker repository in the `image` parameter.
    
    - Deploy the Geocoding application runtime:

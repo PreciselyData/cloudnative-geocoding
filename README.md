@@ -44,7 +44,7 @@ The configured cluster includes:
 -   a minimum of two worker nodes
 -   [NGINX](https://www.nginx.com/) for ingress monitoring and metrics
 -   [Prometheus](https://prometheus.io/) for metrics collection
-- [Prometheus-Adapter](https://github.com/DirectXMan12/k8s-prometheus-adapter) for serving custom metrics
+-   [Prometheus-Adapter](https://github.com/DirectXMan12/k8s-prometheus-adapter) for serving custom metrics
 -   Horizontal Pod Autoscaler \(HPA\)
 -   Kubernetes Cluster Autoscaler
 -   Geocoding reference data installed locally or on cloud-hosted storage
