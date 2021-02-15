@@ -23,10 +23,10 @@ spec:
     volumeHandle: ggs-data-pv  # make sure it's a unique id in the cluster
     volumeAttributes:
     #  resourceGroup: EXISTING_RESOURCE_GROUP_NAME  # optional, only set this when storage account is not in the same resource group as agent node
-      storageAccount: @STORAGE_ACCOUNT_NAME@
-      shareName: @AZURE_FILES_SHARE_NAME@
+      storageAccount: ggsdata
+      shareName: ggsdatashare
     nodeStageSecretRef:
-      name: azure-storage-secret
+      name: azure-ggsdata-storage-secret
       namespace: default
 ---
 kind: PersistentVolumeClaim

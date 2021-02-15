@@ -17,41 +17,72 @@ helm install azurefile-csi-driver azurefile-csi-driver/azurefile-csi-driver --na
 #### 2. Create the Azure Files storage.
 If you have already created & configured an instance of the Azure Files share, and it is accessible from your AKS cluster, then you can ignore this step and move to the next step.
 
-- Loging to Azure CLI
-
+- Register/Enable the NFS 4.1 protocol for your Azure subscription
   ```
-  az login
+  az feature register --name AllowNfsFileShares --namespace Microsoft.Storage --subscription @SUBSCRIPTION_ID@
+  az provider register --namespace Microsoft.Storage
   ```
-
-- Get key of storage account, 
-
-  This key will be used to create an instance of `Azure Files`. Before executing this command replace `@RESOURCE_GROUP@` with your resource group and `@STORAGE_ACCOUNT_NAME@` with storage account's name.
+  Registration approval can take up to an hour. To verify that the registration is complete, use the following commands:
   ```
-  az storage account keys list --resource-group @RESOURCE_GROUP@ --account-name @STORAGE_ACCOUNT_NAME@ --query "[0].value" | tr -d '"'
+  az feature show --name AllowNfsFileShares --namespace Microsoft.Storage --subscription @SUBSCRIPTION_ID@
   ```
-  Your output should be similar to this:
-
-  ```
-  oentIRQt28dlVd62Sb6HpSYb3EmlNwUw0dpl+bwmdXpn2E3iR2+x2Q3ztRfkspWUiHYRbiaZ8UOeSjsjrQZ4vw==
-  ```
-- Create the EFS file system.
-
-  We are using `ggsdatashare` as the name for the Azure Files share name; if you want to use a different name, then you can update the following command accordingly.
   
-  Your output should be similar to this:
+- Create a FileStorage storage account by using following command, only `FileStorage` type storage account has support of [NFS protocol](https://docs.microsoft.com/en-us/azure/storage/files/storage-files-how-to-create-nfs-shares?tabs=azure-portal). Remembering to replace @RESOURCE_GROUP@ with the appropriate values for your environment.
 
-   ```
-   az storage share create --account-name @STORAGE_ACCOUNT_NAME@--account-key @STORAGE_ACCOUNT_KEY@ --name "ggsdatashare"
-   ```
-  Your output should be similar to this:
+  ```
+  az storage account create --name ggsdataaccount --resource-group @RESOURCE_GROUP@ --location eastus --sku Premium_LRS --kind FileStorage --https-only false
 
-   ```
-   {
-      "created": true
-   }
-   ```
-  **Note:** It is recommended that you use [Premium Azure Files](https://docs.microsoft.com/en-us/azure/storage/files/storage-files-scale-targets) for consistent performance of the application.
+  ```
 
+- Create an NFS share
+  ```
+  az storage share-rm create --storage-account ggsdataaccount --resource-group @RESOURCE_GROUP@ --name ggsdatashare --quota 100 --enabled-protocol NFS 
+  ```
+
+- Grant access of FileStorage from your cluster's [virtual network](https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security?tabs=azure-cli).
+  
+  - Find resource group of your AKS cluster - 
+    ```
+    az aks show --name ggssample --resource-group ss4bd-aks-deployment-sample --query "nodeResourceGroup"
+    ```
+    Output:
+    ```
+    "MC_ss4bd-aks-deployment-sample_ggssample_eastus"
+    ```
+  - Find name of your AKS cluster's virtual network. 
+    ```
+    az network vnet list --resource-group MC_ss4bd-aks-deployment-sample_ggssample_eastus --query "[0].name"
+    ```
+    Output:
+    ```
+    "aks-vnet-42915476"
+    ```
+  - Find subnets of your AKS cluster.
+    ```
+    az network vnet show --resource-group MC_ss4bd-aks-deployment-sample_ggssample_eastus --name aks-vnet-42915476 --query "subnets[*].name"
+    ```
+    Output:
+    ```
+    [
+      "aks-subnet"
+    ]
+    ```
+  - Enable service endpoint for Azure Storage on an cluster's virtual network and subnet. 
+    ```
+    az network vnet subnet update --resource-group MC_ss4bd-aks-deployment-sample_ggssample_eastus --vnet-name "aks-vnet-42915476" --name "aks-subnet" --service-endpoints "Microsoft.Storage"
+    ```
+  - Find id of your AKS cluster's subnets
+    ```
+    az network vnet show --resource-group MC_ss4bd-aks-deployment-sample_ggssample_eastus --name aks-vnet-42915476 --query "subnets[*].id"
+    ```
+    Output:
+    ```
+    "/subscriptions/385ad333-7058-453d-846b-6de1aa6c607a/resourceGroups/MC_ss4bd-aks-deployment-sample_ggssample_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42915476/subnets/aks-subnet"
+    ```
+  - Add a network rule for a virtual network and subnet. 
+    ```
+    az storage account network-rule add --resource-group ss4bd-aks-deployment-sample --account-name ggsdataaccount --subnet "/subscriptions/385ad333-7058-453d-846b-6de1aa6c607a/resourceGroups/MC_ss4bd-aks-deployment-sample_ggssample_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42915476/subnets/aks-subnet"
+    ```
 #### 3. Update the persistent volume resource definition to use your Azure files system.
 If you don’t have your EFS FileSystemId, see “Query the FileSystemId for your EFS file system” above.
 
@@ -67,10 +98,20 @@ In the `./ggs/nfs-data/aks/ggs-data-pv.yaml` file, replace:
       storageAccount: ggsdata
       shareName: ggsdatashare
     nodeStageSecretRef:
-      name: azure-storage-secret
+      name: azure-file-storage-secret
       namespace: default
    ```  
-#### 4. Add the Geocoding application Docker image URI.
+#### 4 Create [Kubernetes Secrets](https://kubernetes.io/docs/concepts/configuration/secret/) to access Azure File Share and Blob storage.
+
+  - Create secret with Azure Blob storage account details to access .spd files from Azure Blob Storage.
+    ```
+     kubectl create secret generic azure-storage-secret --from-literal=azurestorageaccountname="@STORAGE_ACCOUNT_NAME@" --from-literal=azurestorageaccountkey="@STORAGE_ACCOUNT_NAME@" 
+    ```
+  - Create secret with File Storage account details, it will be used to mount Azure File share in GGS container
+    ```
+    kubectl create secret generic azure-file-storage-secret --from-literal=azurestorageaccountname="@STORAGE_ACCOUNT_NAME@" --from-literal=azurestorageaccountkey="@STORAGE_ACCOUNT_NAME@" 
+    ```
+#### 5. Add the Geocoding application Docker image URI.
 In the `./ggs/nfs-data/aks/ggs-staging.yaml` file, replace:
 - `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the [ACR Repository](https://azure.microsoft.com/en-in/services/container-registry/) in the `image` parameter. The `@IMAGE_URI@` parameter needs to be replaced in two places.
   ```
@@ -84,12 +125,7 @@ In the `./ggs/nfs-data/aks/ggs-staging.yaml` file, replace:
       - name: ggs-container
         image: @IMAGE_URI@
   ```  
-## Ccreate [Kubernetes Secrets](https://kubernetes.io/docs/concepts/configuration/secret/) with storage account name and key. 
 
-This secret will be used by your cluster to access Azure Blob Storage and Azure Files.
-```
-kubectl create secret generic azure-storage-secret --from-literal=azurestorageaccountname="@STORAGE_ACCOUNT_NAME@" --from-literal=azurestorageaccountkey="@STORAGE_ACCOUNT_NAME@" 
-```
 ## Start the staging deployment
 If you haven't already deployed the geocoding preferences, datasets, and data preparation script config maps, then deploy the following manifest files:
 ```

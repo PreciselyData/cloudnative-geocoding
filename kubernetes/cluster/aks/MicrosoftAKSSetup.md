@@ -1,28 +1,29 @@
 # Azure AKS Cluster Setup Guide
 
-Azure Kubernetes Service (AKS) is Microsoft's secured and managed Kubernetes service with four-way autoscaling and multi-cluster support. This readme provides the steps to create a AKS cluster to deploy the Geocoding application built with Spectrum Global Geocoding SDK. 
+[Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) is Microsoft's secured and managed Kubernetes service with four-way autoscaling and multi-cluster support. This readme provides the steps to create a AKS cluster to deploy the Geocoding application built with Spectrum Global Geocoding SDK. 
 
 ## Prerequisites
-The Geocoding sample on Microsoft AKS requires access to [Azure Files Storage](https://azure.microsoft.com/en-in/services/storage/files/), [Azure Container Registry (ACR)](https://azure.microsoft.com/en-us/services/container-registry/). [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/) is used to store the reference datasets in .spd file format, and the ACR repository contains the Geocoding application's Docker image which is used for the deployment. 
+The Geocoding sample on Microsoft AKS requires access to [Azure Files Storage](https://azure.microsoft.com/en-in/services/storage/files/), [Azure Container Registry (ACR)](https://azure.microsoft.com/en-us/services/container-registry/) and [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/). Azure Blob Storage is used to store the reference datasets in .spd file format, and the ACR repository contains the Geocoding application's Docker image which is used for the deployment. 
 
 To run the Geocoding application on AKS requires permissions on these Microsoft's Azure Cloud resources along with some others listed below.
 
-### Required Permissions
-To deploy the Geocoding application on a AKS cluster, make sure you have at least `Contributor` roles and permissions.
+### Required Permissions & roles
+ - `Contributor` role to create AKS cluster
+ - `Azure Blob Storage Reader`  role to download .spd files from Azure Blob Storage
+ - `Storage File Data SMB Share Contributor` role to read, write, and delete files from Azure Storage file shares over SMB
 
 ## Create the cluster
 Before starting the following steps, make sure you have installed the required tools listed in [Install client tools](../../README.md).	
 
 ### Authenticate and configure gcloud
-Replace the parameters with the values from  your service principal.
+To sign in with a service principal, you need the application ID, tenant ID, and secret; for other authentication method see their [documentation](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli). Replace the parameters with the values from your Azure account.
 ``` 
 az login --service-principal -u @APP_ID@ -p @SECRET@ --tenant @TENANT_ID@
 ``` 
-**Note:** For other methods for azure CLI authntication, you can follow [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli) documentations.
 
-If your Azure account has multiple subscription IDs than configure a Azure subscription ID that will be used  to create the Azure Files Storage instance; otherwise, you will have to provide this subscription ID in each command. We are using `Precisely Gold Sponsorship` as the subscription ID.
+If your Azure account has multiple subscription IDs than configure an Azure subscription ID that will be used for all `azure CLI` commands, otherwise, you will have to provide this subscription ID in each command.
 ```
-az account set --subscription "Precisely Gold Sponsorship"
+az account set --subscription "@SUBSCRIPTION_ID"
 ```
 ### Create the AKS cluster
 To create the cluster, use this command:   

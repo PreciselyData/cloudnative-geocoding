@@ -10,6 +10,7 @@ This sample requires Docker Engine to build the image.
 The image can be pushed to and stored in a cloud registry. Depending on the registry you publish to, determines the tool that you need to install. The Docker CLI is included in the Docker install, so a separate tool is not required for publishing images to Docker Hub.
    * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) - for publishing to Amazon ECR.
    * [gcloud CLI](https://cloud.google.com/sdk) - for publishing to Google GCR.
+   * [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - for publishing to Microsoft ACR.
 
  ### Download the SDK & data
    * Spectrum Global Geocoding SDK (GGS) distribution - For information about GGS, see the [Precisely Support](https://support.precisely.com/) site and the [Spectrum Spatial for Big Data](https://docs.precisely.com/docs/sftw/hadoop/landingpage/index.html) documentation landing page.
@@ -73,6 +74,28 @@ The geocoding Docker sample contains a [Dockerfile](Dockerfile) along with start
    ```
    docker push us.gcr.io/[PROJECT-ID]/[IMAGE]:[TAG]
    ```
+
+   #### Microsoft ACR
+   Use one of the following methods to push your image to your remote repository. We’ve provided some example steps, but you can refer to the [Microsoft documentation](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli) for additional support.
+
+    Login to ACR repository using the service principal of your Azure account; for other authentication method see their [documentation](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli).
+   
+    To sign in with a service principal, you need the application ID, tenant ID, and secret.
+    ```
+     az login --service-principal -u @APP_ID@ -p @SECRET@ --tenant @TENANT_ID@
+     az acr login --name ss4bd --subscription "@SUBSCRIPTION_ID"
+    ```
+   Tag your docker image, where:
+   - `[IMAGE]` = the local image name or ID
+   - `[IMAGE]:[TAG]` = image name and tag. If `[TAG]` field is omitted, `latest` is assumed.
+   ```
+   docker tag [IMAGE] @STORAGE_ACCOUNT_NAME@.azurecr.io/[PROJECT-ID]/[IMAGE]:[TAG]
+   ```
+   Push the image to the GCR repository:
+   ```
+   docker push @STORAGE_ACCOUNT_NAME@.azurecr.io/[PROJECT-ID]/[IMAGE]:[TAG]
+   ```
+
 ## Running the Docker image locally     
 ### Set up the data
 Place your data into the `/docker/geocoding/spd_files` directory. Run the appropriate command below to extract the reference data that the location the application will use at runtime.
