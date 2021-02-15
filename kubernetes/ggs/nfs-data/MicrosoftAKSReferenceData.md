@@ -107,10 +107,7 @@ In the `./ggs/nfs-data/aks/ggs-data-pv.yaml` file, replace:
     ```
      kubectl create secret generic azure-storage-secret --from-literal=azurestorageaccountname="@STORAGE_ACCOUNT_NAME@" --from-literal=azurestorageaccountkey="@STORAGE_ACCOUNT_NAME@" 
     ```
-  - Create secret with File Storage account details, it will be used to mount Azure File share in GGS container
-    ```
-    kubectl create secret generic azure-file-storage-secret --from-literal=azurestorageaccountname="@STORAGE_ACCOUNT_NAME@" --from-literal=azurestorageaccountkey="@STORAGE_ACCOUNT_NAME@" 
-    ```
+
 #### 5. Add the Geocoding application Docker image URI.
 In the `./ggs/nfs-data/aks/ggs-staging.yaml` file, replace:
 - `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the [ACR Repository](https://azure.microsoft.com/en-in/services/container-registry/) in the `image` parameter. The `@IMAGE_URI@` parameter needs to be replaced in two places.
