@@ -43,7 +43,7 @@ The `gcloud` command automatically configures the `kubectl` CLI after creating t
 ```
 az aks get-credentials --resource-group @RESOURCE_GROUP@ --name ggssample --overwrite-existing
 ``` 
-For more information about the `kubectl` configuration, refer to [Google's documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl).
+For more information about the `kubectl` configuration, refer to [Microsoft's documentation](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough).
 
 ### Verify the cluster 
 To verify that your cluster was created successfully, and your kubectl client is pointing to the cluster, execute this command:
