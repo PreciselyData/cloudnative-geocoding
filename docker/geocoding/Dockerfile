@@ -30,8 +30,6 @@ RUN apk update -q \
 
 ## Install gsutil CLI	
 RUN apk add --update \
-       libc6-compat \
-	   ca-certificates \
        py-cffi \
        py-cryptography \
     && apk add --virtual build-deps \
@@ -47,7 +45,10 @@ RUN apk add --update \
     && rm -rf /var/cache/apk/* 
 
 ## Install Azure's azure-storage-blob python API to generate Azure SAS token	
-RUN pip install azure-storage-blob 
+RUN apk add --update \
+       libc6-compat \
+	   ca-certificates \
+    && pip install azure-storage-blob 
 	
 ## Copy configured ggs libraries and azcopy cli from build stage
 COPY --from=build /usr/local/ggs /usr/local/ggs
