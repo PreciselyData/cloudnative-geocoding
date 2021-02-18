@@ -27,7 +27,7 @@ If you have already created & configured an instance of the Azure Files share, a
   az feature show --name AllowNfsFileShares --namespace Microsoft.Storage --subscription @SUBSCRIPTION_ID@
   ```
   
-- Create a FileStorage storage account by using following command, only `FileStorage` type storage account has support of [NFS protocol](https://docs.microsoft.com/en-us/azure/storage/files/storage-files-how-to-create-nfs-shares?tabs=azure-portal). Remembering to replace @RESOURCE_GROUP@ with the appropriate values for your environment.
+- Create a FileStorage storage account by using following command, only `FileStorage` type storage account has support of [NFS protocol](https://docs.microsoft.com/en-us/azure/storage/files/storage-files-how-to-create-nfs-shares?tabs=azure-portal).
 
   ```
   az storage account create --name ggsdataaccount --location eastus --sku Premium_LRS --kind FileStorage --https-only false
@@ -95,17 +95,18 @@ In the `./ggs/nfs-data/aks/ggs-data-pv.yaml` file, replace:
     readOnly: false
     volumeHandle: ggs-data-pv  # make sure it's a unique id in the cluster
     volumeAttributes:
-      storageAccount: ggsdata
-      shareName: ggsdatashare
-    nodeStageSecretRef:
-      name: azure-file-storage-secret
-      namespace: default
+      #resourceGroup: EXISTING_RESOURCE_GROUP_NAME  # optional, only set this when storage account is not in the same resource group as agent node
+      storageAccount: @STORAGE_ACCOUNT_NAME@
+      shareName: @AZURE_FILES_SHARE_NAME@  # only file share name, don't use full path
+      protocol: nfs
    ```  
-#### 4 Create [Kubernetes Secrets](https://kubernetes.io/docs/concepts/configuration/secret/) to access Azure File Share and Blob storage.
+#### 4 Create [Kubernetes Secrets](https://kubernetes.io/docs/concepts/configuration/secret/) to access Azure Blob storage.
 
-  - Create secret with Azure Blob storage account details to access .spd files from Azure Blob Storage.
+  - Provide your Azure Blob storage account's name and key
+    - `@STORAGE_ACCOUNT_NAME@` - Storage account's name
+    - `@STORAGE_ACCOUNT_KEY@`  - Storage account's key
     ```
-     kubectl create secret generic azure-storage-secret --from-literal=azurestorageaccountname="@STORAGE_ACCOUNT_NAME@" --from-literal=azurestorageaccountkey="@STORAGE_ACCOUNT_NAME@" 
+     kubectl create secret generic azure-storage-secret --from-literal=azurestorageaccountname="@STORAGE_ACCOUNT_NAME@" --from-literal=azurestorageaccountkey="@STORAGE_ACCOUNT_KEY@" 
     ```
 
 #### 5. Add the Geocoding application Docker image URI.
