@@ -30,26 +30,26 @@ If you have already created & configured an instance of the Azure Files share, a
 - Create a FileStorage storage account by using following command, only `FileStorage` type storage account has support of [NFS protocol](https://docs.microsoft.com/en-us/azure/storage/files/storage-files-how-to-create-nfs-shares?tabs=azure-portal). Remembering to replace @RESOURCE_GROUP@ with the appropriate values for your environment.
 
   ```
-  az storage account create --name ggsdataaccount --resource-group @RESOURCE_GROUP@ --location eastus --sku Premium_LRS --kind FileStorage --https-only false
+  az storage account create --name ggsdataaccount --location eastus --sku Premium_LRS --kind FileStorage --https-only false
 
   ```
 
 - Create an NFS share
   ```
-  az storage share-rm create --storage-account ggsdataaccount --resource-group @RESOURCE_GROUP@ --name ggsdatashare --quota 100 --enabled-protocol NFS 
+  az storage share-rm create --storage-account ggsdataaccount --name ggsdatashare --quota 100 --enabled-protocol NFS 
   ```
 
 - Grant access of FileStorage from your cluster's [virtual network](https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security?tabs=azure-cli).
   
-  - Find resource group of your AKS cluster - 
+  - Find node resource group of your AKS cluster - 
     ```
-    az aks show --name ggssample --resource-group ss4bd-aks-deployment-sample --query "nodeResourceGroup"
+    az aks show --name ggssample --query "nodeResourceGroup"
     ```
     Output:
     ```
     "MC_ss4bd-aks-deployment-sample_ggssample_eastus"
     ```
-  - Find name of your AKS cluster's virtual network. 
+  - Find name of your AKS cluster's virtual network by using node resource group. 
     ```
     az network vnet list --resource-group MC_ss4bd-aks-deployment-sample_ggssample_eastus --query "[0].name"
     ```
@@ -57,7 +57,7 @@ If you have already created & configured an instance of the Azure Files share, a
     ```
     "aks-vnet-42915476"
     ```
-  - Find subnets of your AKS cluster.
+  - Find subnets of your AKS cluster by using node resource group.
     ```
     az network vnet show --resource-group MC_ss4bd-aks-deployment-sample_ggssample_eastus --name aks-vnet-42915476 --query "subnets[*].name"
     ```
@@ -67,7 +67,7 @@ If you have already created & configured an instance of the Azure Files share, a
       "aks-subnet"
     ]
     ```
-  - Enable service endpoint for Azure Storage on an cluster's virtual network and subnet. 
+  - Enable service endpoint for Azure Storage on your cluster's virtual network and subnet.
     ```
     az network vnet subnet update --resource-group MC_ss4bd-aks-deployment-sample_ggssample_eastus --vnet-name "aks-vnet-42915476" --name "aks-subnet" --service-endpoints "Microsoft.Storage"
     ```
@@ -81,7 +81,7 @@ If you have already created & configured an instance of the Azure Files share, a
     ```
   - Add a network rule for a virtual network and subnet. 
     ```
-    az storage account network-rule add --resource-group ss4bd-aks-deployment-sample --account-name ggsdataaccount --subnet "/subscriptions/385ad333-7058-453d-846b-6de1aa6c607a/resourceGroups/MC_ss4bd-aks-deployment-sample_ggssample_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42915476/subnets/aks-subnet"
+    az storage account network-rule add --account-name ggsdataaccount --subnet "/subscriptions/385ad333-7058-453d-846b-6de1aa6c607a/resourceGroups/MC_ss4bd-aks-deployment-sample_ggssample_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42915476/subnets/aks-subnet"
     ```
 #### 3. Update the persistent volume resource definition to use your Azure files system.
 If you don’t have your EFS FileSystemId, see “Query the FileSystemId for your EFS file system” above.

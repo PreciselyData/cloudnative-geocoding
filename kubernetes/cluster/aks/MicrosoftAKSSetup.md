@@ -17,33 +17,36 @@ Before starting the following steps, make sure you have installed the required t
 
 ### Authenticate Azure CLI
 
-There are several authentication methods for the Azure CLI; use any authentication method. For details about Azure's authentication types see their [documentation](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli).
+Azure CLI supports multiple authentication methods; use any authentication method to sign in. For details about Azure's authentication types see their [documentation](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli).
 
 ``` 
 az login 
 ``` 
 
-If your Azure account has multiple subscription IDs than configure an Azure subscription ID that will be used for all `azure CLI` commands, otherwise, you will have to provide this subscription ID in each command.
+If your Azure account has multiple subscription IDs than set one ID as default subscription ID, that will be used for all `azure CLI` commands, otherwise you will have to provide this subscription ID in each command.
 ```
 az account set --subscription "@SUBSCRIPTION_ID"
+```
+Configure your resource group, this will be used to create all resources - cluster and storage account. otherwise you will have to provide it in each command.
+```
+az configure --defaults group=@RESOURCE_GROUP@
 ```
 ### Create the AKS cluster
 To create the cluster, use this command:   
 ``` 
-az aks create --name ggssample --resource-group @RESOURCE_GROUP@ --attach-acr @ACR_REPOSITORY@ --enable-cluster-autoscaler --min-count 1 --max-count 2 --node-osdisk-type Managed --node-osdisk-size 100 --node-vm-size Standard_DS4_v2  --nodepool-labels node-app=ggs
+az aks create --name ggssample --attach-acr @ACR_REPOSITORY@ --enable-cluster-autoscaler --min-count 1 --max-count 2 --node-osdisk-type Managed --node-osdisk-size 100 --node-vm-size Standard_DS4_v2  --nodepool-labels node-app=ggs
 ```  
   
 ### Create a node pool for NGINX Ingress
 To create a node pool for the NGINX Ingress controller, use this command:
 ``` 
-az aks nodepool add --cluster-name ggssample --name ingress --resource-group @RESOURCE_GROUP@ --labels node-app=ingress --node-count 1 --node-vm-size Standard_DS4_v2 --node-osdisk-size 50
+az aks nodepool add --cluster-name ggssample --name ingress --labels node-app=ingress --node-count 1 --node-vm-size Standard_DS4_v2 --node-osdisk-size 50
 ``` 
 
 ### Configure the `kubectl` client 
-To manage the AKS cluster, configure your `kubectl` CLI  to point your cluster.
-The `gcloud` command automatically configures the `kubectl` CLI after creating the cluster. If you want to manage the cluster from a different machine, use this command to configure it:
+To manage the AKS cluster, configure your `kubectl` CLI  to point your cluster:
 ```
-az aks get-credentials --resource-group @RESOURCE_GROUP@ --name ggssample --overwrite-existing
+az aks get-credentials --name ggssample --overwrite-existing
 ``` 
 For more information about the `kubectl` configuration, refer to [Microsoft's documentation](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough).
 
@@ -60,5 +63,5 @@ CoreDNS is running at https://ggssample-ss4bd-aks-deploy-385ad3-47738680.hcp.eas
 Metrics-server is running at https://ggssample-ss4bd-aks-deploy-385ad3-47738680.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy   
 ```  
 
-To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+To further debug and diagnose cluster problems, use `kubectl cluster-info dump`.
 
