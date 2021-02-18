@@ -15,10 +15,12 @@ To run the Geocoding application on AKS requires permissions on these Microsoft'
 ## Create the cluster
 Before starting the following steps, make sure you have installed the required tools listed in [Install client tools](../../README.md).	
 
-### Authenticate and configure gcloud
-To sign in with a service principal, you need the application ID, tenant ID, and secret; for other authentication method see their [documentation](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli). Replace the parameters with the values from your Azure account.
+### Authenticate Azure CLI
+
+There are several authentication methods for the Azure CLI; use any authentication method. For details about Azure's authentication types see their [documentation](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli).
+
 ``` 
-az login --service-principal -u @APP_ID@ -p @SECRET@ --tenant @TENANT_ID@
+az login 
 ``` 
 
 If your Azure account has multiple subscription IDs than configure an Azure subscription ID that will be used for all `azure CLI` commands, otherwise, you will have to provide this subscription ID in each command.

@@ -49,10 +49,12 @@ RUN apk add --update \
        libc6-compat \
 	   ca-certificates \
     && pip install azure-storage-blob 
-	
-## Copy configured ggs libraries and azcopy cli from build stage
+
+## Copy azcopy CLI from build stage	
+COPY --from=build /usr/local/azure/azcopy /usr/local/bin/azcopy	
+
+## Copy configured ggs libraries from build stage
 COPY --from=build /usr/local/ggs /usr/local/ggs
 COPY --from=build $CATALINA_HOME/webapps/geocode $CATALINA_HOME/webapps/geocode
-COPY --from=build /usr/local/azure/azcopy /usr/local/bin/azcopy
 	
 CMD ["/usr/local/ggs/deploy-ggs.sh"]
