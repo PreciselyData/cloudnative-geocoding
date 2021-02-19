@@ -82,6 +82,8 @@ If you have already created & configured an instance of the Azure Files share, a
   - Add a network rule for a virtual network and subnet. 
     ```
     az storage account network-rule add --account-name ggsdataaccount --subnet "/subscriptions/385ad333-7058-453d-846b-6de1aa6c607a/resourceGroups/MC_ss4bd-aks-deployment-sample_ggssample_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42915476/subnets/aks-subnet"
+	
+	az storage account update --name ggsdataaccount --default-action Deny
     ```
 #### 3. Update the persistent volume resource definition to use your Azure files system.
 If you don’t have your EFS FileSystemId, see “Query the FileSystemId for your EFS file system” above.
