@@ -80,9 +80,12 @@ The geocoding Docker sample contains a [Dockerfile](Dockerfile) along with start
 
    Azure CLI supports multiple authentication methods; use any authentication method to sign in. For details about Azure's authentication types see their [documentation](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli).
 
+   - `[AZURE_CONTAINER_REGISTRY]` =  Azure container registry name
+   - `[SUBSCRIPTION_ID]` =  Azure subscription ID
+   
    ``` 
    az login 
-   az acr login --name ss4bd --subscription "@SUBSCRIPTION_ID"
+   az acr login --name [AZURE_CONTAINER_REGISTRY] --subscription [SUBSCRIPTION_ID]
    ``` 
 	
    Tag your docker image, where:

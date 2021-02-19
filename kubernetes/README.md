@@ -28,7 +28,7 @@ The sample geocoding application requires a Kubernetes cluster with at least one
 ##### Google GKE
 >To create a Google GKE cluster, follow the instructions in [GoogleGKESetup.md](./cluster/gke/GoogleGKESetup.md).
 ##### Microsoft AKS
->To create a Microsoft AKS cluster, follow the instructions in [MicrosoftAKSSetup.md](./cluster/gke/MicrosoftAKSSetup.md).
+>To create a Microsoft AKS cluster, follow the instructions in [MicrosoftAKSSetup.md](./cluster/aks/MicrosoftAKSSetup.md).
 
 ## Configure Helm
 Add the required Helm chart repositories. These repositories will be used to deploy components in the cluster:

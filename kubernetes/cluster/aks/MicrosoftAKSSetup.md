@@ -10,7 +10,7 @@ To run the Geocoding application on AKS requires permissions on these Microsoft'
 ### Required Permissions & roles
  - `Contributor` role to create AKS cluster
  - `Azure Blob Storage Reader`  role to download .spd files from Azure Blob Storage
- - `Storage File Data SMB Share Contributor` role to read, write, and delete files from Azure Storage file shares over SMB
+ - `Storage File Data SMB Share Contributor` role to read, write, and delete files from Azure Storage file shares over SMB/NFS
 
 ## Create the cluster
 Before starting the following steps, make sure you have installed the required tools listed in [Install client tools](../../README.md).	
@@ -25,7 +25,7 @@ az login
 
 If your Azure account has multiple subscription IDs than set one ID as default subscription ID, that will be used for all `azure CLI` commands, otherwise you will have to provide this subscription ID in each command.
 ```
-az account set --subscription "@SUBSCRIPTION_ID"
+az account set --subscription "@SUBSCRIPTION_ID@"
 ```
 Configure your resource group, this will be used to create all resources - cluster and storage account. otherwise you will have to provide it in each command.
 ```
@@ -46,7 +46,7 @@ az aks nodepool add --cluster-name ggssample --name ingress --labels node-app=in
 ### Configure the `kubectl` client 
 To manage the AKS cluster, configure your `kubectl` CLI  to point your cluster:
 ```
-az aks get-credentials --name ggssample --overwrite-existing
+az aks get-credentials --name ggssample
 ``` 
 For more information about the `kubectl` configuration, refer to [Microsoft's documentation](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough).
 
