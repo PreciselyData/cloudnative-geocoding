@@ -5,7 +5,7 @@ This sample demonstrates using a [persistent volume](https://kubernetes.io/docs/
 This reference data deployment process needs to be executed only once for the Geocoding application deployment. You only need to re-run it when you want to update the deployed data, such as with a new vintage, or if you want to add support for additional countries.  At that time, you can use the staging process to prepare a new, separate, persistent volume and then update your running deployment of the Geocoding application to use that new persistent volume with zero application downtime.
 
 ## Create and configure an Azure Files share
-The following directions will guide you through the process of preparing an `Azure Files` for your deployment by using the `Azure CLI`.  If you have already created and configured an ` Azure Files share` that you want to use, and it is accessible from your AKS cluster, then you can skip this step and move on to the next.
+The following directions will guide you through the process of preparing an `Azure Files` instance for your deployment by using the `Azure CLI`.  If you have already created and configured an ` Azure Files share` that you want to use, and it is accessible from your AKS cluster, then you can skip this step and move on to the next.
 
 #### 1. Deploy the CSI Driver - this will be used to mount  Azure Files storage with a persistent volume.
 ```
@@ -84,12 +84,11 @@ If you have already created & configured an instance of the Azure Files share, a
 	az storage account update --name ggsdataaccount --default-action Deny
     ```
 #### 3. Update the persistent volume resource definition to use your Azure files system.
-
-    In the `./ggs/nfs-data/aks/ggs-data-pv.yaml` file, replace:
+  In the `./ggs/nfs-data/aks/ggs-data-pv.yaml` file, replace:
     - `@STORAGE_ACCOUNT_NAME@` - your storage account name
     - `@AZURE_FILES_SHARE_NAME@` - your Azure Files share name
 
-    ```
+   ```
     csi:
       driver: file.csi.azure.com
       readOnly: false
@@ -99,7 +98,7 @@ If you have already created & configured an instance of the Azure Files share, a
         storageAccount: @STORAGE_ACCOUNT_NAME@
         shareName: @AZURE_FILES_SHARE_NAME@  # only file share name, don't use full path
         protocol: nfs
-    ```  
+   ```  
 
 #### 4 Create [Kubernetes Secret](https://kubernetes.io/docs/concepts/configuration/secret/) to access Azure Blob storage.
 
