@@ -19,19 +19,18 @@ If you have already created & configured an instance of the Azure Files share, a
 
 - Register/Enable the NFS 4.1 protocol for your Azure subscription
   ```
-  az feature register --name AllowNfsFileShares --namespace Microsoft.Storage --subscription @SUBSCRIPTION_ID@
+  az feature register --name AllowNfsFileShares --namespace Microsoft.Storage
   az provider register --namespace Microsoft.Storage
   ```
   Registration approval can take up to an hour. To verify that the registration is complete, use the following commands:
   ```
-  az feature show --name AllowNfsFileShares --namespace Microsoft.Storage --subscription @SUBSCRIPTION_ID@
+  az feature show --name AllowNfsFileShares --namespace Microsoft.Storage
   ```
   
 - Create a FileStorage storage account by using following command, only `FileStorage` type storage account has support of [NFS protocol](https://docs.microsoft.com/en-us/azure/storage/files/storage-files-how-to-create-nfs-shares?tabs=azure-portal).
 
   ```
   az storage account create --name ggsdataaccount --location eastus --sku Premium_LRS --kind FileStorage --https-only false
-
   ```
 
 - Create an NFS share
@@ -79,30 +78,30 @@ If you have already created & configured an instance of the Azure Files share, a
     ```
     "/subscriptions/385ad333-7058-453d-846b-6de1aa6c607a/resourceGroups/MC_ss4bd-aks-deployment-sample_ggssample_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42915476/subnets/aks-subnet"
     ```
-  - Add a network rule for a virtual network and subnet. 
+  - Add a network rule for your cluster's virtual network and subnet. 
     ```
     az storage account network-rule add --account-name ggsdataaccount --subnet "/subscriptions/385ad333-7058-453d-846b-6de1aa6c607a/resourceGroups/MC_ss4bd-aks-deployment-sample_ggssample_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42915476/subnets/aks-subnet"
-	
 	az storage account update --name ggsdataaccount --default-action Deny
     ```
 #### 3. Update the persistent volume resource definition to use your Azure files system.
-If you don’t have your EFS FileSystemId, see “Query the FileSystemId for your EFS file system” above.
 
-In the `./ggs/nfs-data/aks/ggs-data-pv.yaml` file, replace:
-- `@STORAGE_ACCOUNT_NAME@` - your storage account name
-- `@AZURE_FILES_SHARE_NAME@` - your Azure Files share name
-  ```
-  csi:
-    driver: file.csi.azure.com
-    readOnly: false
-    volumeHandle: ggs-data-pv  # make sure it's a unique id in the cluster
-    volumeAttributes:
-      #resourceGroup: EXISTING_RESOURCE_GROUP_NAME  # optional, only set this when storage account is not in the same resource group as agent node
-      storageAccount: @STORAGE_ACCOUNT_NAME@
-      shareName: @AZURE_FILES_SHARE_NAME@  # only file share name, don't use full path
-      protocol: nfs
-   ```  
-#### 4 Create [Kubernetes Secrets](https://kubernetes.io/docs/concepts/configuration/secret/) to access Azure Blob storage.
+    In the `./ggs/nfs-data/aks/ggs-data-pv.yaml` file, replace:
+    - `@STORAGE_ACCOUNT_NAME@` - your storage account name
+    - `@AZURE_FILES_SHARE_NAME@` - your Azure Files share name
+
+    ```
+    csi:
+      driver: file.csi.azure.com
+      readOnly: false
+      volumeHandle: ggs-data-pv  # make sure it's a unique id in the cluster
+      volumeAttributes:
+        #resourceGroup: EXISTING_RESOURCE_GROUP_NAME  # optional, only set this when storage account is not in the same resource group as agent node
+        storageAccount: @STORAGE_ACCOUNT_NAME@
+        shareName: @AZURE_FILES_SHARE_NAME@  # only file share name, don't use full path
+        protocol: nfs
+    ```  
+
+#### 4 Create [Kubernetes Secret](https://kubernetes.io/docs/concepts/configuration/secret/) to access Azure Blob storage.
 
   - Provide your Azure Blob storage account's name and key
     - `@STORAGE_ACCOUNT_NAME@` - Storage account's name
