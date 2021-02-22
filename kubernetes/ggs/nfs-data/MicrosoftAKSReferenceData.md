@@ -85,8 +85,8 @@ If you have already created & configured an instance of the Azure Files share, a
     ```
 #### 3. Update the persistent volume resource definition to use your Azure files system.
   In the `./ggs/nfs-data/aks/ggs-data-pv.yaml` file, replace:
-    - `@STORAGE_ACCOUNT_NAME@` - your storage account name
-    - `@AZURE_FILES_SHARE_NAME@` - your Azure Files share name
+  - `@STORAGE_ACCOUNT_NAME@` - your storage account name
+  - `@AZURE_FILES_SHARE_NAME@` - your Azure Files share name
 
    ```
     csi:
