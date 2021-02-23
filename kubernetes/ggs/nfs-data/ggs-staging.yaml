@@ -49,6 +49,10 @@ spec:
           value: /usr/local/ggs-data
         - name: SPD_LIST
           value: /usr/local/ggs-datasets
+        envFrom:
+        - secretRef:
+            name: ggs-storage-secret
+            optional: true
       containers:
       - name: ggs-container
         image: @IMAGE_URI@

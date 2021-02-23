@@ -95,15 +95,17 @@ Execute these commands:
 
 ## Create Azure Storage secret (Only for Azure AKS)
 
-AKS cluster need storage account's credentials to access [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/) and [Azure Files](https://azure.microsoft.com/en-in/services/storage/files/). Cluster will access these credentials from `azure-storage-secret`.
+- Provide your Azure Blob storage account's name and key
+    - `AZURE_STORAGE_ACCOUNT` - storage account's name
+    - `AZURE_STORAGE_ACCOUNT_KEY`  - storage account's key
+  ```
+   kubectl create secret generic azure-storage-secret --from-literal=AZURE_STORAGE_ACCOUNT="ss4bd" --from-literal=AZURE_STORAGE_ACCOUNT_KEY="+mBdpB0fSsasaasmgTO33U3BfwxNajt9GYdW7TwKhg5Jr49bzj/e805CVayt8DhsjashajlGH6E37aiyNjV2FwAX5g==" 
+  ```
 
-```
-kubectl create secret generic azure-storage-secret --from-literal=azurestorageaccountname="STORAGE_ACCOUNT_NAME" --from-literal=azurestorageaccountkey="STORAGE_ACCOUNT_KEY" 
-```
 **Note:** To create this secret from Azure Key Vault, you can follow Microsoft's documentations for [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes)
   
 ## Configure the reference datasets
-The Geocoding application requires geocoding reference datasets, which are .spd files that must be available on [S3](https://aws.amazon.com/s3/) for EKS, or on [Google Storage](https://cloud.google.com/storage/docs/creating-buckets) for GKE or [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/) for Microsoft AKS. The datasets will be accessed from the `./ggs/ggs-datasets-cm.yaml` config map. 
+The Geocoding application requires geocoding reference datasets, which are .spd files that must be available on [S3](https://aws.amazon.com/s3/) for EKS, [Google Storage](https://cloud.google.com/storage/docs/creating-buckets) for GKE, or [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/) for Microsoft AKS. The datasets will be accessed from the `./ggs/ggs-datasets-cm.yaml` config map. 
 
    * If you have not already downloaded the reference data, for information about Precisely's data portfolio, see the [Precisely Data Guide](https://dataguide.precisely.com/) where you can also sign up for a free account and access sample data available in [Precisely Data Experience](https://data.precisely.com/). 
 

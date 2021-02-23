@@ -13,8 +13,8 @@ data:
    import os
    import sys   
    
-   account=os.getenv('STORAGE_ACCOUNT')
-   accountKey=os.getenv('STORAGE_ACCOUNT_KEY')
+   account=os.getenv('AZURE_STORAGE_ACCOUNT')
+   accountKey=os.getenv('AZURE_STORAGE_ACCOUNT_KEY')
    
    sas_token = generate_account_sas(        
         account_name=account,

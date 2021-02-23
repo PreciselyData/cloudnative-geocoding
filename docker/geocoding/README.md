@@ -92,7 +92,7 @@ The geocoding Docker sample contains a [Dockerfile](Dockerfile) along with start
    - `[IMAGE]` = the local image name or ID
    - `[IMAGE]:[TAG]` = image name and tag. If `[TAG]` field is omitted, `latest` is assumed.
    ```
-   docker tag [IMAGE] @STORAGE_ACCOUNT_NAME@.azurecr.io/[PROJECT-ID]/[IMAGE]:[TAG]
+   docker tag [IMAGE] [STORAGE_ACCOUNT_NAME].azurecr.io/[PROJECT-ID]/[IMAGE]:[TAG]
    ```
    Push the image to the GCR repository:
    ```
