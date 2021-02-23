@@ -76,11 +76,11 @@ If you have already created & configured an instance of the Azure Files share, a
     ```
     Output:
     ```
-    "/subscriptions/385ad333-7058-453d-846b-6de1aa6c607a/resourceGroups/MC_ss4bd-aks-deployment-sample_ggssample_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42915476/subnets/aks-subnet"
+    "/subscriptions/291bba3f-e0a5-47bc-a099-3bdcb2a50a05/resourceGroups/MC_ss4bd-aks-deployment-sample_ggssample_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42915476/subnets/aks-subnet"
     ```
   - Add a network rule for your cluster's virtual network and subnet. 
     ```
-    az storage account network-rule add --account-name ggsdataaccount --subnet "/subscriptions/385ad333-7058-453d-846b-6de1aa6c607a/resourceGroups/MC_ss4bd-aks-deployment-sample_ggssample_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42915476/subnets/aks-subnet"
+    az storage account network-rule add --account-name ggsdataaccount --subnet "/subscriptions/291bba3f-e0a5-47bc-a099-3bdcb2a50a05/resourceGroups/MC_ss4bd-aks-deployment-sample_ggssample_eastus/providers/Microsoft.Network/virtualNetworks/aks-vnet-42915476/subnets/aks-subnet"
 	az storage account update --name ggsdataaccount --default-action Deny
     ```
 #### 3. Update the persistent volume resource definition to use your Azure files system.
