@@ -113,21 +113,21 @@ In the `./ggs/ggs-datasets-cm.yaml` file, specify the full path of each dataset 
 ##### Amazon EKS
 ```
   spd.list : |
-    s3://com-precisely-geocoding/data/2019.09/USA-GCM-PITNEYBOWES-8US-100-201909-INTERACTIVE.spd
-    s3://com-precisely-geocoding/data/2019.09/EGM-WORLD-STREET-WBL-100-201909-GEOCODING.spd
+    s3://com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
+    s3://com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
 ``` 
 ##### Google GKE
 ```
   spd.list : |
-     gs://com-precisely-geocoding/data/2019.09/USA-GCM-PITNEYBOWES-8US-100-201909-INTERACTIVE.spd
-     gs://com-precisely-geocoding/data/2019.09/EGM-WORLD-STREET-WBL-100-201909-GEOCODING.spd
+     gs://com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
+     gs://com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
 ```
 ##### Microsoft AKS
 
 ```
   spd.list : |
-    https://ss4bd.blob.core.windows.net/com-precisely-geocoding/data/2019.09/EGM-WORLD-STREET-WBL-100-201909-GEOCODING.spd
-    https://ss4bd.blob.core.windows.net/com-precisely-geocoding/data/2019.09/USA-GCM-PITNEYBOWES-8US-100-201909-INTERACTIVE.spd
+    https://ss4bd.blob.core.windows.net/com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
+    https://ss4bd.blob.core.windows.net/com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
 ```
 
 Deploy the datasets manifest script:  
