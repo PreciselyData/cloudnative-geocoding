@@ -82,7 +82,7 @@ helm repo add stable https://charts.helm.sh/stable
 
 ## Update credentials in Kubernetes secret script
 
-This is required to access .dps files from cloud storage. Provide any one of these credentials.
+This is required to access .spd files from cloud storage. Provide any one of these credentials.
 
 ##### Amazon EKS
 
