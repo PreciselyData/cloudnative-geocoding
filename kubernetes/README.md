@@ -148,7 +148,7 @@ The Geocoding application requires geocoding reference datasets, which are .spd 
 
    * If you have not already downloaded the reference data, for information about Precisely's data portfolio, see the [Precisely Data Guide](https://dataguide.precisely.com/) where you can also sign up for a free account and access sample data available in [Precisely Data Experience](https://data.precisely.com/). 
 
-In the `./ggs/ggs-datasets-cm.yaml` file, specify the full path of each dataset file kept on S3 in the `spd.list` parameter.
+In the `./ggs/ggs-datasets-cm.yaml` file, specify the full path of each dataset file kept on cloud storage in the `spd.list` parameter.
 
 **Note:** Dont use URI scheme in complete path of dataset.
 
