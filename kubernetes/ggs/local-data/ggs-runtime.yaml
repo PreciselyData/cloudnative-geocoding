@@ -51,7 +51,6 @@ spec:
         envFrom:
         - secretRef:
             name: ggs-storage-secret
-            optional: true
       containers:
       - name: ggs-container
         image: @IMAGE_URI@

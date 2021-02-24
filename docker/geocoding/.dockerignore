@@ -6,4 +6,5 @@
 !ggs/resources/bin/linux64
 !ggs/resources/application.properties
 !deploy-ggs.sh
+!rclone.conf
 
