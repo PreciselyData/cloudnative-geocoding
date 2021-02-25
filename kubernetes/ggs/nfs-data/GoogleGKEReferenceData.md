@@ -98,30 +98,13 @@ In the `./ggs/nfs-data/ggs-staging.yaml` file, specify the URI of the Geocoding 
          image: @IMAGE_URI@
   ```  
 
-#### 4. Add the `GS_AUTH2_REFRESH_TOKEN` parameter and Google project name.
-In the `../ggs/gke/ggs-dataprep-cm.yaml` file, replace:
--  `@GS_AUTH2_REFRESH_TOKEN@` - a valid gsutil refresh token
-- `@PROJECT_ID@` - the Google project name.      
-
-  ```
-    .boto: |
-    [Credentials]
-    gs_oauth2_refresh_token = 1//0gzLN6zasjaksjaksjaksjGBASNwF-L9Irp8J9hTDMmfpiuZp_AsbajsajsajsawrQTgxSi56OWvdMGkssk5zZt0lrc9Y2WaVE
-    [Boto]
-    https_validate_certificates = True
-    [GSUtil]
-    content_language = en
-    default_api_version = 2
-    default_project_id = ggs-demo
-  ```
-
-      
 ## Start the staging deployment
 If you haven't already deployed the geocoding preferences, datasets, and data preparation script config maps, then deploy the following manifest files:
 ```
 kubectl apply -f ./ggs/ggs-datasets-cm.yaml
 kubectl apply -f ./ggs/geocode-preferences-cm.yaml
-kubectl apply -f ./ggs/gke/ggs-dataprep-cm.yaml
+kubectl apply -f ./ggs/ggs-storage-secret.yml
+kubectl apply -f ./ggs/ggs-dataprep-cm.yaml
 ```
 
 Deploy the reference data by executing the following commands: 

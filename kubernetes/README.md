@@ -84,7 +84,7 @@ helm repo add stable https://charts.helm.sh/stable
 
 This is required to access .spd files from cloud storage. In the `./ggs/ggs-storage-secret.yml` file, specify any one of these credentials in the `stringData` parameter.
 
-##### Amazon EKS
+##### Amazon [S3](https://aws.amazon.com/s3/)
 
 - Provide your S3 credentials
     - `S3_ACCESS_KEY` - s3 access key
@@ -95,7 +95,7 @@ This is required to access .spd files from cloud storage. In the `./ggs/ggs-stor
      S3_SECRET_KEY: "o70*************************************Re" 
   ```
   
-##### Google GKE
+##### Google [Cloud Storage](https://cloud.google.com/storage)
 - Provide json string of your Google service account's key
     - `GOOGLE_SERVICE_ACCOUNT_KEY_JSON` - json string of Google service account's key
     
@@ -116,7 +116,7 @@ This is required to access .spd files from cloud storage. In the `./ggs/ggs-stor
          }
   ```
   
-##### Microsoft AKS
+##### Microsoft [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/)
 - Provide your Azure Blob storage account's name and key
     - `AZURE_STORAGE_ACCOUNT` - storage account's name
     - `AZURE_STORAGE_ACCOUNT_KEY`  - storage account's key
@@ -125,28 +125,17 @@ This is required to access .spd files from cloud storage. In the `./ggs/ggs-stor
      AZURE_STORAGE_ACCOUNT: "s***d"
      AZURE_STORAGE_ACCOUNT_KEY: "+mBd***********************************************************X5g==" 
   ```
-
 **Note:** To create this secret from Azure Key Vault, you can follow Microsoft's documentations for [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes)
 
-## Deploy the geocoder default preferences and shared resources
-These resources will be described the same across all Kubernetes platforms.
-
-To modify the geocoder default preferences, see the `ggs/geocode-preferences-cm.yaml` file for descriptions of the configuration parameters.
-
-Execute these commands:   
-   ```
-   kubectl apply -f ./ggs/geocode-preferences-cm.yaml
-   kubectl apply -f ./ggs/ggs-storage-secret.yml 
-   kubectl apply -f ./ggs/ggs-dataprep-cm.yaml 
-   kubectl apply -f ./ggs/ggs-service.yaml
-   kubectl apply -f ./ggs-ingress/ggs-ingress-resource.yaml 
-   kubectl apply -f ./ggs/ggs-hpa.yaml  
-   ```
+Deploy the secret manifest script:
+```
+kubectl apply -f ./ggs/ggs-storage-secret.yml
+``` 
 
 ## Configure the reference datasets
-The Geocoding application requires geocoding reference datasets, which are .spd files that must be available on [S3](https://aws.amazon.com/s3/) for EKS, [Google Storage](https://cloud.google.com/storage/docs/creating-buckets) for GKE, or [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/) for Microsoft AKS. The datasets will be accessed from the `./ggs/ggs-datasets-cm.yaml` config map. 
+The Geocoding application requires geocoding reference datasets, which are .spd files that must be available on [S3](https://aws.amazon.com/s3/) for EKS, [Google Storage](https://cloud.google.com/storage/docs/creating-buckets) for GKE, or [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/) for Microsoft AKS. The datasets will be accessed from the `./ggs/ggs-datasets-cm.yaml` config map.
 
-   * If you have not already downloaded the reference data, for information about Precisely's data portfolio, see the [Precisely Data Guide](https://dataguide.precisely.com/) where you can also sign up for a free account and access sample data available in [Precisely Data Experience](https://data.precisely.com/). 
+* If you have not already downloaded the reference data, for information about Precisely's data portfolio, see the [Precisely Data Guide](https://dataguide.precisely.com/) where you can also sign up for a free account and access sample data available in [Precisely Data Experience](https://data.precisely.com/).
 
 In the `./ggs/ggs-datasets-cm.yaml` file, specify the full path of each dataset file kept on cloud storage in the `spd.list` parameter.
 
@@ -158,10 +147,24 @@ In the `./ggs/ggs-datasets-cm.yaml` file, specify the full path of each dataset 
     com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
 ```
 
-Deploy the datasets manifest script:  
+Deploy the datasets manifest script:
 ```
 kubectl apply -f ./ggs/ggs-datasets-cm.yaml
 ``` 
+
+## Deploy the geocoder default preferences and shared resources
+These resources will be described the same across all Kubernetes platforms.
+
+To modify the geocoder default preferences, see the `ggs/geocode-preferences-cm.yaml` file for descriptions of the configuration parameters.
+
+Execute these commands:   
+   ```
+   kubectl apply -f ./ggs/geocode-preferences-cm.yaml    
+   kubectl apply -f ./ggs/ggs-dataprep-cm.yaml 
+   kubectl apply -f ./ggs/ggs-service.yaml
+   kubectl apply -f ./ggs-ingress/ggs-ingress-resource.yaml 
+   kubectl apply -f ./ggs/ggs-hpa.yaml  
+   ```
 
 ## Deploy the Geocoding application
 Spectrum Global Geocoding requires the reference data to be available on the file system of the pod running the geocoding service. Due to the size of the reference data, the data is managed outside of the docker image and configured during deployment.  Two options for configuring the reference data are provided:
