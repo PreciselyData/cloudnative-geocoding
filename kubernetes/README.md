@@ -99,7 +99,7 @@ Execute these commands:
     - `AZURE_STORAGE_ACCOUNT` - storage account's name
     - `AZURE_STORAGE_ACCOUNT_KEY`  - storage account's key
   ```
-   kubectl create secret generic azure-storage-secret --from-literal=AZURE_STORAGE_ACCOUNT="ss4bd" --from-literal=AZURE_STORAGE_ACCOUNT_KEY="+mBdpB0fSsasaasmgTO33U3BfwxNajt9GYdW7TwKhg5Jr49bzj/e805CVayt8DhsjashajlGH6E37aiyNjV2FwAX5g==" 
+   kubectl create secret generic azure-storage-secret --from-literal=AZURE_STORAGE_ACCOUNT="@STORAGE_ACCOUNT_NAME@" --from-literal=AZURE_STORAGE_ACCOUNT_KEY="@STORAGE_ACCOUNT_KEY@" 
   ```
 
 **Note:** To create this secret from Azure Key Vault, you can follow Microsoft's documentations for [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes)
