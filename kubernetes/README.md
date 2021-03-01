@@ -99,7 +99,7 @@ Execute these commands:
     - `AZURE_STORAGE_ACCOUNT` - storage account's name
     - `AZURE_STORAGE_ACCOUNT_KEY`  - storage account's key
   ```
-   kubectl create secret generic azure-storage-secret --from-literal=AZURE_STORAGE_ACCOUNT="@STORAGE_ACCOUNT_NAME@" --from-literal=AZURE_STORAGE_ACCOUNT_KEY="@STORAGE_ACCOUNT_KEY@" 
+   kubectl create secret generic ggs-storage-secret --from-literal=AZURE_STORAGE_ACCOUNT="@STORAGE_ACCOUNT_NAME@" --from-literal=AZURE_STORAGE_ACCOUNT_KEY="@STORAGE_ACCOUNT_KEY@" 
   ```
 
 **Note:** To create this secret from Azure Key Vault, you can follow Microsoft's documentations for [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes)
@@ -189,7 +189,7 @@ Steps to deploy:
 
   1. Add the Geocoding application Docker image URI.
      
-     For `Google GKE` or `Amazon EKS` use `./ggs/local-data/ggs-runtime.yaml` file, but for `Microsoft AKS` use `./ggs/local-data/aks/ggs-runtime.yaml` file. In the file, replace:
+     For `Google GKE` or `Amazon EKS` use `./ggs/local-data/ggs-runtime.yaml` file, but for `Microsoft AKS` use `./ggs/local-data/ggs-runtime.yaml` file. In the file, replace:
      - `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the Docker repository in the `image` parameter. The `@IMAGE_URI@` parameter needs to be replaced in two places.
       ```
           initContainers:

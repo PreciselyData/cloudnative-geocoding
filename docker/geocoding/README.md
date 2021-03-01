@@ -96,7 +96,7 @@ The geocoding Docker sample contains a [Dockerfile](Dockerfile) along with start
    ```
    Push the image to the GCR repository:
    ```
-   docker push @STORAGE_ACCOUNT_NAME@.azurecr.io/[PROJECT-ID]/[IMAGE]:[TAG]
+   docker push [STORAGE_ACCOUNT_NAME].azurecr.io/[PROJECT-ID]/[IMAGE]:[TAG]
    ```
 
 ## Running the Docker image locally     

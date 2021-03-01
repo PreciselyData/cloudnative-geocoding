@@ -94,14 +94,14 @@ If you have already created & configured an instance of the Azure Files share, a
       readOnly: false
       volumeHandle: ggs-data-pv  # make sure it's a unique id in the cluster
       volumeAttributes:
-        #resourceGroup: EXISTING_RESOURCE_GROUP_NAME  # optional, only set this when storage account is not in the same resource group as agent node
+        #resourceGroup: @EXISTING_RESOURCE_GROUP_NAME@ # optional, only set this when storage account is not in the same resource group as agent node
         storageAccount: @STORAGE_ACCOUNT_NAME@
         shareName: @AZURE_FILES_SHARE_NAME@  # only file share name, don't use full path
         protocol: nfs
    ```  
 
 #### 4. Add the Geocoding application Docker image URI.
-In the `./ggs/nfs-data/aks/ggs-staging.yaml` file, replace:
+In the `./ggs/nfs-data/ggs-staging.yaml` file, replace:
 - `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the [ACR Repository](https://azure.microsoft.com/en-in/services/container-registry/) in the `image` parameter. The `@IMAGE_URI@` parameter needs to be replaced in two places.
   ```
   initContainers:
@@ -125,7 +125,7 @@ kubectl apply -f ./ggs/aks/ggs-dataprep-cm.yaml
 Create the persistent volume and staging deployment:
 ```
 kubectl apply -f ./ggs/nfs-data/aks/ggs-data-pv.yaml
-kubectl apply -f ./ggs/nfs-data/aks/ggs-staging.yaml
+kubectl apply -f ./ggs/nfs-data/ggs-staging.yaml
 ```
 After these commands execute, the staging deployment will start, and the init container used in the staging deployment will copy the data to the persistent volume.  Once the staging deployment enters the “running” state, the copy is complete. Depending on the size of the reference datasets, this process may take some time.
 
@@ -155,7 +155,7 @@ To verify that the reference data successfully deployed, you can issue a request
 ## Delete the staging resources
 After verifying the data, the staging resources are no longer needed and can be deleted using this command:
 ```
-kubectl delete -f ./ggs/nfs-data/aks/ggs-staging.yaml
+kubectl delete -f ./ggs/nfs-data/ggs-staging.yaml
 ```
 ## Next step
 Now that the persistent volume has been created, and the reference data has been configured on your Azure Files share, you can mount the persistent volume to use that data in your [Geocoding application deployment](../../README.md).
