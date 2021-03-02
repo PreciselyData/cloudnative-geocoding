@@ -10,6 +10,7 @@ The following directions will guide you through the process of preparing an EFS 
 #### 1. Deploy the CSI Driver - this will be used to mount EFS storage with a persistent volume.
 ```
 helm repo add aws-efs-csi-driver https://kubernetes-sigs.github.io/aws-efs-csi-driver/
+helm repo update
 helm install aws-efs-csi-driver aws-efs-csi-driver/aws-efs-csi-driver
 ```
 
