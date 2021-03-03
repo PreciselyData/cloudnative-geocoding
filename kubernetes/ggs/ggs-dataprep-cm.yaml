@@ -17,14 +17,14 @@ data:
     # copy spds locally 
     if [[ ! -z "${S3_ACCESS_KEY}" ]]; then 
        echo "Found AWS S3 credentials, downloading .spd files from AWS S3 ... "       
-       parallel -a $SPD_LIST/spd.list rclone copy s3:{1} $LOCAL_ZIP_DIR --s3-access-key-id $S3_ACCESS_KEY --s3-secret-access-key $S3_SECRET_KEY --s3-region $S3_REGION -v
+       parallel -a $SPD_LIST/spd.list rclone copy {1} $LOCAL_ZIP_DIR --s3-access-key-id $S3_ACCESS_KEY --s3-secret-access-key $S3_SECRET_KEY --s3-region $S3_REGION -v
     elif [[ ! -z "${GOOGLE_SERVICE_ACCOUNT_KEY_JSON}" ]]; then
        echo "Found Google credentials, downloading .spd files from Google Storage ... "
        echo "$GOOGLE_SERVICE_ACCOUNT_KEY_JSON" > /usr/local/ggs/gcs_key.json
-       parallel -a $SPD_LIST/spd.list rclone copy gs:{1} $LOCAL_ZIP_DIR --gcs-service-account-file /usr/local/ggs/gcs_key.json -v
+       parallel -a $SPD_LIST/spd.list rclone copy {1} $LOCAL_ZIP_DIR --gcs-service-account-file /usr/local/ggs/gcs_key.json -v
     elif [[ ! -z "${AZURE_STORAGE_ACCOUNT}" ]]; then
        echo "Found Azure credentials, downloading .spd files from Azure Storage ... "
-       parallel -a $SPD_LIST/spd.list rclone copy azure:{1} $LOCAL_ZIP_DIR --azureblob-account $AZURE_STORAGE_ACCOUNT --azureblob-key $AZURE_STORAGE_ACCOUNT_KEY -v
+       parallel -a $SPD_LIST/spd.list rclone copy {1} $LOCAL_ZIP_DIR --azureblob-account $AZURE_STORAGE_ACCOUNT --azureblob-key $AZURE_STORAGE_ACCOUNT_KEY -v
     else
        echo "No credentials found to download .spd files. Check ggs-storage-secret for credentials."
        exit 1

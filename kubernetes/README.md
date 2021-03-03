@@ -80,7 +80,7 @@ helm repo add stable https://charts.helm.sh/stable
         
         >`Error from server (ServiceUnavailable): the server is currently unable to handle the request`
 
-## Update credentials in Kubernetes secret script
+## Update credentials in Kubernetes secret
 
 This is required to access .spd files from cloud storage. In the `./ggs/ggs-storage-secret.yml` file, specify any one of these credentials in the `stringData` parameter.
 
