@@ -17,15 +17,15 @@ RUN cd /tmp \
     && mv /tmp/rclone-*-linux-amd64/rclone /usr/local/rclone \
     && rm -r /tmp/rclone*	
 
-COPY rclone.conf /usr/local/rclone/
-	
 FROM tomcat:8.5-alpine
 MAINTAINER Precisely
+
+RUN apk --no-cache add bc
 
 RUN apk --no-cache add ca-certificates fuse tzdata parallel \
     && echo "user_allow_other" >> /etc/fuse.conf \
     && rm -rf /var/cache/apk/*
-
+	
 ## Copy rclone cli from build stage
 COPY --from=build /usr/local/rclone /usr/bin
 	

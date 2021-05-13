@@ -14,22 +14,14 @@ data:
     LOCAL_ZIP_DIR=/usr/local/ggs/ggs-zip
     mkdir -p $LOCAL_ZIP_DIR
     
-    # copy spds locally 
-    if [[ ! -z "${S3_ACCESS_KEY}" ]]; then 
-       echo "Found AWS S3 credentials, downloading .spd files from AWS S3 ... "       
-       parallel -a $SPD_LIST/spd.list rclone copy {1} $LOCAL_ZIP_DIR --s3-access-key-id $S3_ACCESS_KEY --s3-secret-access-key $S3_SECRET_KEY --s3-region $S3_REGION -v
-    elif [[ ! -z "${GOOGLE_SERVICE_ACCOUNT_KEY_JSON}" ]]; then
-       echo "Found Google credentials, downloading .spd files from Google Storage ... "
-       echo "$GOOGLE_SERVICE_ACCOUNT_KEY_JSON" > /usr/local/ggs/gcs_key.json
-       parallel -a $SPD_LIST/spd.list rclone copy {1} $LOCAL_ZIP_DIR --gcs-service-account-file /usr/local/ggs/gcs_key.json -v
-    elif [[ ! -z "${AZURE_STORAGE_ACCOUNT}" ]]; then
-       echo "Found Azure credentials, downloading .spd files from Azure Storage ... "
-       parallel -a $SPD_LIST/spd.list rclone copy {1} $LOCAL_ZIP_DIR --azureblob-account $AZURE_STORAGE_ACCOUNT --azureblob-key $AZURE_STORAGE_ACCOUNT_KEY -v
-    else
-       echo "No credentials found to download .spd files. Check ggs-storage-secret for credentials."
-       exit 1
-    fi 
+    #copy rclone.conf to make it writable (docs say this is necessary in some cases of token based auth usage)
+    mkdir /usr/local/rclone-conf
+    cp /rclone-conf/rclone.conf /usr/local/rclone-conf
+    chmod -R u+w /usr/local/rclone-conf
     
+    # copy spds locally 
+    parallel -a $SPD_LIST/spd.list rclone copy {1} $LOCAL_ZIP_DIR --config /usr/local/rclone-conf/rclone.conf --verbose
+        
     # create destination directory and extract datasets
     mkdir -p $GGS_DATA
     cd /usr/local/ggs/cli
