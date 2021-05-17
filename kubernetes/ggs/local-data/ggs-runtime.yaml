@@ -27,9 +27,9 @@ spec:
       - name: config-datasets
         configMap:
           name: ggs-datasets
-      - name: rclone-conf
+      - name: secret-folder
         secret:
-          secretName: rclone-conf
+          secretName: secret-folder
       initContainers:
       - name: ggs-dataprep-container
         image: @IMAGE_URI@
@@ -42,8 +42,8 @@ spec:
           mountPath: /usr/local/ggs-dataprep
         - name: config-datasets
           mountPath: /usr/local/ggs-datasets
-        - name: rclone-conf
-          mountPath: /rclone-conf
+        - name: secret-folder
+          mountPath: /secret-folder
         resources:
           requests:
             cpu: 6

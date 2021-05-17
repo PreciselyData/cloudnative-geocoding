@@ -16,7 +16,7 @@ data:
     
     #copy rclone.conf to make it writable (docs say this is necessary in some cases of token based auth usage)
     mkdir /usr/local/rclone-conf
-    cp /rclone-conf/rclone.conf /usr/local/rclone-conf
+    cp /secret-folder/rclone.conf /usr/local/rclone-conf
     chmod -R u+w /usr/local/rclone-conf
     
     # copy spds locally 
