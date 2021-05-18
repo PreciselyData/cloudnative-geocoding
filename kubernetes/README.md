@@ -101,7 +101,7 @@ This is required to access .spd files from cloud storage. Place all credentials 
 
 **Note:** To create this secret from Azure Key Vault, you can follow Microsoft's documentations for [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes)
 
-Create the Kubernetes secret for the cluster:
+After updating credentials, create the Kubernetes secret for the cluster:
 ```
 kubectl create secret generic secret-folder --from-file=./cluster/secret-folder
 ``` 

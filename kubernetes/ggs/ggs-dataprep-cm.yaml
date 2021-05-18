@@ -20,7 +20,7 @@ data:
     chmod -R u+w /usr/local/rclone-conf
     
     # copy spds locally 
-    parallel -a $SPD_LIST/spd.list rclone copy {1} $LOCAL_ZIP_DIR --config /usr/local/rclone-conf/rclone.conf --verbose
+    parallel -a $SPD_LIST/spd.list rclone copy {1} $LOCAL_ZIP_DIR --config /usr/local/rclone-conf/rclone.conf --error-on-no-transfer --verbose
         
     # create destination directory and extract datasets
     mkdir -p $GGS_DATA
