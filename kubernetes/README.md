@@ -82,54 +82,28 @@ helm repo add stable https://charts.helm.sh/stable
 
 ## Update credentials in Kubernetes secret
 
-This is required to access .spd files from cloud storage. In the `./ggs/ggs-storage-secret.yml` file, specify any one of these credentials in the `stringData` parameter.
+This is required to access .spd files from cloud storage. Place all credentials related information in the `./cluster/secret-folder` folder.  Update the `./cluster/secret-folder/rclone.conf` file with the appropriate configuration.  This file is already populated with simple configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account json files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/secret-folder`.
 
 ##### Amazon [S3](https://aws.amazon.com/s3/)
 
-- Provide your S3 credentials
-    - `S3_ACCESS_KEY` - s3 access key
-    - `S3_SECRET_KEY`  - s3 secret key
-  ```
-   stringData:
-     S3_ACCESS_KEY: "AKI*****************J"
-     S3_SECRET_KEY: "o70*************************************Re" 
-  ```
+- Either update the example `rclone.conf` with your key information, or replace the `rclone.conf` with your own configured `rclone.conf` file.
+    - `AWS_ACCESS_KEY_ID` - s3 access key
+    - `AWS_SECRET_ACCESS_KEY`  - s3 secret key
+	- `AWS_DEFAULT_REGION` - s3 region
   
 ##### Google [Cloud Storage](https://cloud.google.com/storage)
-- Provide json string of your Google service account's key
-    - `GOOGLE_SERVICE_ACCOUNT_KEY_JSON` - json string of Google service account's key
-    
-  ```
-   stringData:
-     GOOGLE_SERVICE_ACCOUNT_KEY_JSON: |
-         {
-          "type": "service_account",
-          "project_id": "l*******l",
-          "private_key_id": "133********************************14c8f",
-          "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIB*********************************CzDQ==\n-----END PRIVATE KEY-----\n",
-          "client_email": "s*****tion@l***********l.iam.gserviceaccount.com",
-          "client_id": "10************************893",
-          "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-          "token_uri": "https://oauth2.googleapis.com/token",
-          "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-          "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/s*****tion@l***********l.iam.gserviceaccount.com"
-         }
-  ```
+- The example `rclone.conf` for Google Storage assumes the usage of a service account.  Place the Google service account json file in the `./cluster/secret-folder` folder, and name it ggs-account.json.  Alternatively, replace the example `rclone.conf` with a customer configured `rclone.conf` file.
   
 ##### Microsoft [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/)
 - Provide your Azure Blob storage account's name and key
-    - `AZURE_STORAGE_ACCOUNT` - storage account's name
-    - `AZURE_STORAGE_ACCOUNT_KEY`  - storage account's key
-  ```
-   stringData:
-     AZURE_STORAGE_ACCOUNT: "s***d"
-     AZURE_STORAGE_ACCOUNT_KEY: "+mBd***********************************************************X5g==" 
-  ```
+    - `AZURE_REFERENCE_DATA_STORAGE_ACCOUNT` - storage account's name
+    - `AZURE_REFERENCE_DATA_STORAGE_ACCOUNT_KEY`  - storage account's key
+
 **Note:** To create this secret from Azure Key Vault, you can follow Microsoft's documentations for [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes)
 
-Deploy the secret manifest script:
+Create the Kubernetes secret for the cluster:
 ```
-kubectl apply -f ./ggs/ggs-storage-secret.yml
+kubectl create secret generic secret-folder --from-file=./cluster/secret-folder
 ``` 
 
 ## Configure the reference datasets
@@ -137,14 +111,13 @@ The Geocoding application requires geocoding reference datasets, which are .spd 
 
 * If you have not already downloaded the reference data, for information about Precisely's data portfolio, see the [Precisely Data Guide](https://dataguide.precisely.com/) where you can also sign up for a free account and access sample data available in [Precisely Data Experience](https://data.precisely.com/).
 
-In the `./ggs/ggs-datasets-cm.yaml` file, specify the full path of each dataset file kept on cloud storage in the `spd.list` parameter.
-
-**Note:** Dont use URI scheme in complete path of dataset.
-
+In the `./ggs/ggs-datasets-cm.yaml` file, specify the rclone path of each dataset file kept on cloud storage in the `spd.list` parameter.
+          
+Example using the azure configuration:
 ```
   spd.list : |
-    com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
-    com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
+    azure:com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
+    azure:com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
 ```
 
 Deploy the datasets manifest script:
