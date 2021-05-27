@@ -27,6 +27,9 @@ spec:
       - name: config-datasets
         configMap:
           name: ggs-datasets
+      - name: ggs-storage-secrets
+        secret:
+          secretName: ggs-storage-secrets
       initContainers:
       - name: ggs-dataprep-container
         image: @IMAGE_URI@
@@ -39,6 +42,8 @@ spec:
           mountPath: /usr/local/ggs-dataprep
         - name: config-datasets
           mountPath: /usr/local/ggs-datasets
+        - name: ggs-storage-secrets
+          mountPath: /usr/local/ggs-storage-secrets
         resources:
           requests:
             cpu: 6
@@ -48,10 +53,6 @@ spec:
           value: /usr/local/ggs-data
         - name: SPD_LIST
           value: /usr/local/ggs-datasets
-        envFrom:
-        - secretRef:
-            name: ggs-storage-secret
-            optional: true
       containers:
       - name: ggs-container
         image: @IMAGE_URI@

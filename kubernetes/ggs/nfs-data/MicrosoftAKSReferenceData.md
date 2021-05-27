@@ -120,7 +120,7 @@ If you haven't already deployed the geocoding preferences, datasets, and data pr
 ```
 kubectl apply -f ./ggs/ggs-datasets-cm.yaml
 kubectl apply -f ./ggs/geocode-preferences-cm.yaml
-kubectl apply -f ./ggs/aks/ggs-dataprep-cm.yaml
+kubectl apply -f ./ggs/ggs-dataprep-cm.yaml
 ```
 Create the persistent volume and staging deployment:
 ```

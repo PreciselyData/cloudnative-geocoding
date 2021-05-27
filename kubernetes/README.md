@@ -79,7 +79,52 @@ helm repo add stable https://charts.helm.sh/stable
         >`Error from server (NotFound): the server could not find the metric nginx_active_connections for namespaces`              
         
         >`Error from server (ServiceUnavailable): the server is currently unable to handle the request`
-                    
+
+## Update credentials in Kubernetes secret
+
+This is required to access .spd files from cloud storage. Place all credentials related information in the `./ggs/ggs-storage-secrets` folder.  Update the `./ggs/ggs-storage-secrets/rclone.conf` file with the appropriate configuration.  This file is already populated with simple configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account json files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/usr/local/ggs-storage-secrets`.
+
+##### Amazon [S3](https://aws.amazon.com/s3/)
+
+- Either update the example `rclone.conf` with your key information, or replace the `rclone.conf` with your own configured `rclone.conf` file.
+    - `AWS_ACCESS_KEY_ID` - s3 access key
+    - `AWS_SECRET_ACCESS_KEY`  - s3 secret key
+    - `AWS_DEFAULT_REGION` - s3 region
+  
+##### Google [Cloud Storage](https://cloud.google.com/storage)
+- The example `rclone.conf` for Google Storage assumes the usage of a service account.  Place the Google service account json file in the `./ggs/ggs-storage-secrets` folder and update the file name in the `./ggs/ggs-storage-secrets/rclone.conf` file.
+  
+##### Microsoft [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/)
+- Provide your Azure Blob storage account's name and key
+    - `AZURE_REFERENCE_DATA_STORAGE_ACCOUNT` - storage account's name
+    - `AZURE_REFERENCE_DATA_STORAGE_ACCOUNT_KEY`  - storage account's key
+
+**Note:** To create this secret from Azure Key Vault, you can follow Microsoft's documentations for [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes)
+
+After updating credentials, create the Kubernetes secret for the cluster:
+```
+kubectl create secret generic ggs-storage-secrets --from-file=./ggs/ggs-storage-secrets
+``` 
+
+## Configure the reference datasets
+The Geocoding application requires geocoding reference datasets, which are .spd files that must be available on [S3](https://aws.amazon.com/s3/) for EKS, [Google Storage](https://cloud.google.com/storage/docs/creating-buckets) for GKE, or [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/) for Microsoft AKS. The datasets will be accessed from the `./ggs/ggs-datasets-cm.yaml` config map.
+
+* If you have not already downloaded the reference data, for information about Precisely's data portfolio, see the [Precisely Data Guide](https://dataguide.precisely.com/) where you can also sign up for a free account and access sample data available in [Precisely Data Experience](https://data.precisely.com/).
+
+In the `./ggs/ggs-datasets-cm.yaml` file, specify the rclone path of each dataset file kept on cloud storage in the `spd.list` parameter.
+          
+Example using the azure configuration:
+```
+  spd.list : |
+    az:com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
+    az:com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
+```
+
+Deploy the datasets manifest script:
+```
+kubectl apply -f ./ggs/ggs-datasets-cm.yaml
+``` 
+
 ## Deploy the geocoder default preferences and shared resources
 These resources will be described the same across all Kubernetes platforms.
 
@@ -87,91 +132,11 @@ To modify the geocoder default preferences, see the `ggs/geocode-preferences-cm.
 
 Execute these commands:   
    ```
-   kubectl apply -f ./ggs/geocode-preferences-cm.yaml
+   kubectl apply -f ./ggs/geocode-preferences-cm.yaml    
+   kubectl apply -f ./ggs/ggs-dataprep-cm.yaml 
    kubectl apply -f ./ggs/ggs-service.yaml
    kubectl apply -f ./ggs-ingress/ggs-ingress-resource.yaml 
    kubectl apply -f ./ggs/ggs-hpa.yaml  
-   ```
-
-## Create Azure Storage secret (Only for Azure AKS)
-
-- Provide your Azure Blob storage account's name and key
-    - `AZURE_STORAGE_ACCOUNT` - storage account's name
-    - `AZURE_STORAGE_ACCOUNT_KEY`  - storage account's key
-  ```
-   kubectl create secret generic ggs-storage-secret --from-literal=AZURE_STORAGE_ACCOUNT="@STORAGE_ACCOUNT_NAME@" --from-literal=AZURE_STORAGE_ACCOUNT_KEY="@STORAGE_ACCOUNT_KEY@" 
-  ```
-
-**Note:** To create this secret from Azure Key Vault, you can follow Microsoft's documentations for [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes)
-  
-## Configure the reference datasets
-The Geocoding application requires geocoding reference datasets, which are .spd files that must be available on [S3](https://aws.amazon.com/s3/) for EKS, [Google Storage](https://cloud.google.com/storage/docs/creating-buckets) for GKE, or [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/) for Microsoft AKS. The datasets will be accessed from the `./ggs/ggs-datasets-cm.yaml` config map. 
-
-   * If you have not already downloaded the reference data, for information about Precisely's data portfolio, see the [Precisely Data Guide](https://dataguide.precisely.com/) where you can also sign up for a free account and access sample data available in [Precisely Data Experience](https://data.precisely.com/). 
-
-In the `./ggs/ggs-datasets-cm.yaml` file, specify the full path of each dataset file kept on S3 in the `spd.list` parameter.
-##### Amazon EKS
-```
-  spd.list : |
-    s3://com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
-    s3://com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
-``` 
-##### Google GKE
-```
-  spd.list : |
-     gs://com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
-     gs://com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
-```
-##### Microsoft AKS
-
-```
-  spd.list : |
-    https://ss4bd.blob.core.windows.net/com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
-    https://ss4bd.blob.core.windows.net/com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
-```
-
-Deploy the datasets manifest script:  
-```
-kubectl apply -f ./ggs/ggs-datasets-cm.yaml
-``` 
-
-## Deploy the data configuration script
-This script is used by the Geocoding application to copy the data from cloud storage and to configure the data for use by the running pods.
-##### Amazon EKS
-   Use the `./ggs/eks/ggs-dataprep-cm.yaml` manifest file for the deployment:
-
-   ```
-   kubectl apply -f ggs/eks/ggs-dataprep-cm.yaml
-   ```
-##### Google GKE
-  Use the `./ggs/gke/ggs-dataprep-cm.yaml` manifest file for the deployment. In the `ggs/gke/ggs-dataprep-cm.yaml` file, replace:
-  -  `@GS_AUTH2_REFRESH_TOKEN@` - with a valid gsutil refresh token and 
-  - `@PROJECT_ID@` - with Google project ID      
-       
-  ```
-        .boto: |
-        [Credentials]
-        gs_oauth2_refresh_token = 1//0gzLN6zasjaksjaksjaksjGBASNwF-L9Irp8J9hTDMmfpiuZp_AsbajsajsajsawrQTgxSi56OWvdMGkssk5zZt0lrc9Y2WaVE
-        [Boto]
-        https_validate_certificates = True
-        [GSUtil]
-        content_language = en
-        default_api_version = 2
-        default_project_id = ggs-demo
-  ```
-       
-  To obtain the `gs_oauth2_refresh_token` needed to read from Google Storage, see Google's [documentation](https://cloud.google.com/storage/docs/gsutil/commands/config).
-
-  Deploy the deployment script:
-  ```
-  kubectl apply -f ggs/gke/ggs-dataprep-cm.yaml
-  ```
-
-##### Microsoft AKS
-   Use the `./ggs/aks/ggs-dataprep-cm.yaml` manifest file for the deployment:
-
-   ```
-   kubectl apply -f ggs/aks/ggs-dataprep-cm.yaml
    ```
 
 ## Deploy the Geocoding application
