@@ -89,7 +89,7 @@ This is required to access .spd files from cloud storage. Place all credentials 
 - Either update the example `rclone.conf` with your key information, or replace the `rclone.conf` with your own configured `rclone.conf` file.
     - `AWS_ACCESS_KEY_ID` - s3 access key
     - `AWS_SECRET_ACCESS_KEY`  - s3 secret key
-	- `AWS_DEFAULT_REGION` - s3 region
+    - `AWS_DEFAULT_REGION` - s3 region
   
 ##### Google [Cloud Storage](https://cloud.google.com/storage)
 - The example `rclone.conf` for Google Storage assumes the usage of a service account.  Place the Google service account json file in the `./ggs/ggs-storage-secrets` folder and update the file name in the `./ggs/ggs-storage-secrets/rclone.conf` file.
@@ -154,7 +154,7 @@ Steps to deploy:
 
   1. Add the Geocoding application Docker image URI.
      
-     For `Google GKE` or `Amazon EKS` use `./ggs/local-data/ggs-runtime.yaml` file, but for `Microsoft AKS` use `./ggs/local-data/aks/ggs-runtime.yaml` file. In the file, replace:
+     For `Google GKE` or `Amazon EKS` use `./ggs/local-data/ggs-runtime.yaml` file, but for `Microsoft AKS` use `./ggs/local-data/ggs-runtime.yaml` file. In the file, replace:
      - `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the Docker repository in the `image` parameter. The `@IMAGE_URI@` parameter needs to be replaced in two places.
       ```
           initContainers:

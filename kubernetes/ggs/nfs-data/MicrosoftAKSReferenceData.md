@@ -94,7 +94,7 @@ If you have already created & configured an instance of the Azure Files share, a
       readOnly: false
       volumeHandle: ggs-data-pv  # make sure it's a unique id in the cluster
       volumeAttributes:
-        #resourceGroup: EXISTING_RESOURCE_GROUP_NAME  # optional, only set this when storage account is not in the same resource group as agent node
+        #resourceGroup: @EXISTING_RESOURCE_GROUP_NAME@ # optional, only set this when storage account is not in the same resource group as agent node
         storageAccount: @STORAGE_ACCOUNT_NAME@
         shareName: @AZURE_FILES_SHARE_NAME@  # only file share name, don't use full path
         protocol: nfs
