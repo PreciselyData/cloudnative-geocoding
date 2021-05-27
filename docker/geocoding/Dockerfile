@@ -22,7 +22,7 @@ MAINTAINER Precisely
 
 RUN apk --no-cache add bc
 
-RUN apk --no-cache add ca-certificates fuse tzdata parallel \
+RUN apk --no-cache add ca-certificates fuse tzdata \
     && echo "user_allow_other" >> /etc/fuse.conf \
     && rm -rf /var/cache/apk/*
 	

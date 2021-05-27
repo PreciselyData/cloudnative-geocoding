@@ -82,7 +82,7 @@ helm repo add stable https://charts.helm.sh/stable
 
 ## Update credentials in Kubernetes secret
 
-This is required to access .spd files from cloud storage. Place all credentials related information in the `./cluster/secret-folder` folder.  Update the `./cluster/secret-folder/rclone.conf` file with the appropriate configuration.  This file is already populated with simple configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account json files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/secret-folder`.
+This is required to access .spd files from cloud storage. Place all credentials related information in the `./ggs/ggs-storage-secrets` folder.  Update the `./ggs/ggs-storage-secrets/rclone.conf` file with the appropriate configuration.  This file is already populated with simple configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account json files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/usr/local/ggs-storage-secrets`.
 
 ##### Amazon [S3](https://aws.amazon.com/s3/)
 
@@ -92,7 +92,7 @@ This is required to access .spd files from cloud storage. Place all credentials 
 	- `AWS_DEFAULT_REGION` - s3 region
   
 ##### Google [Cloud Storage](https://cloud.google.com/storage)
-- The example `rclone.conf` for Google Storage assumes the usage of a service account.  Place the Google service account json file in the `./cluster/secret-folder` folder, and name it ggs-account.json.  Alternatively, replace the example `rclone.conf` with a customer configured `rclone.conf` file.
+- The example `rclone.conf` for Google Storage assumes the usage of a service account.  Place the Google service account json file in the `./ggs/ggs-storage-secrets` folder and update the file name in the `./ggs/ggs-storage-secrets/rclone.conf` file.
   
 ##### Microsoft [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/)
 - Provide your Azure Blob storage account's name and key
@@ -103,7 +103,7 @@ This is required to access .spd files from cloud storage. Place all credentials 
 
 After updating credentials, create the Kubernetes secret for the cluster:
 ```
-kubectl create secret generic secret-folder --from-file=./cluster/secret-folder
+kubectl create secret generic ggs-storage-secrets --from-file=./ggs/ggs-storage-secrets
 ``` 
 
 ## Configure the reference datasets
@@ -116,8 +116,8 @@ In the `./ggs/ggs-datasets-cm.yaml` file, specify the rclone path of each datase
 Example using the azure configuration:
 ```
   spd.list : |
-    azure:com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
-    azure:com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
+    az:com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
+    az:com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
 ```
 
 Deploy the datasets manifest script:
