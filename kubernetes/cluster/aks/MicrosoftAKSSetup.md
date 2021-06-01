@@ -34,7 +34,7 @@ az configure --defaults group=@RESOURCE_GROUP@
 ### Create the AKS cluster
 To create the cluster, use this command:   
 ``` 
-az aks create --name ggssample --attach-acr @ACR_REPOSITORY@ --enable-cluster-autoscaler --min-count 1 --max-count 2 --node-osdisk-type Managed --node-osdisk-size 100 --node-vm-size Standard_DS4_v2  --nodepool-labels node-app=ggs
+az aks create --name ggssample --attach-acr @ACR_REPOSITORY@ --enable-cluster-autoscaler --min-count 1 --max-count 10 --node-osdisk-type Managed --node-osdisk-size 100 --node-vm-size Standard_DS4_v2  --nodepool-labels node-app=ggs
 ```  
   
 ### Create a node pool for NGINX Ingress
