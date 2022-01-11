@@ -24,11 +24,11 @@ To build the Docker image, use one of these methods:
 The sample geocoding application requires a Kubernetes cluster with at least one node to run the Geocoding application and a separate node for the NGINX ingress controller. This sample cluster will scale the number of nodes available for running the Geocoding application up to a maximum of 10, based on user load.
 
 ##### Amazon EKS
->To create an Amazon EKS cluster, follow the instructions in [AmazonEKSSetup.md](./cluster/eks/AmazonEKSSetup.md). 
+>To create an Amazon EKS cluster, follow the instructions in [README.md](./cluster/eks/README.md). 
 ##### Google GKE
->To create a Google GKE cluster, follow the instructions in [GoogleGKESetup.md](./cluster/gke/GoogleGKESetup.md).
+>To create a Google GKE cluster, follow the instructions in [README.md](./cluster/gke/README.md).
 ##### Microsoft AKS
->To create a Microsoft AKS cluster, follow the instructions in [MicrosoftAKSSetup.md](./cluster/aks/MicrosoftAKSSetup.md).
+>To create a Microsoft AKS cluster, follow the instructions in [README.md](./cluster/aks/README.md).
 
 ## Configure Helm
 Add the required Helm chart repositories. These repositories will be used to deploy components in the cluster:
