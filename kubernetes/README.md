@@ -82,7 +82,7 @@ helm repo add stable https://charts.helm.sh/stable
 
 ## Update credentials in Kubernetes secret
 
-This is required to access .spd files from cloud storage. Place all credentials related information in the `./ggs/ggs-storage-secrets` folder.  Update the `./ggs/ggs-storage-secrets/rclone.conf` file with the appropriate configuration.  This file is already populated with simple configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account json files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/usr/local/ggs-storage-secrets`.
+This is required to access .spd files from cloud storage. Place all credentials related information in the `./ggs/ggs-storage-secrets` folder.  Update the `./ggs/ggs-storage-secrets/rclone.conf` file with the appropriate configuration.  This file is already populated with simple configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account JSON files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/usr/local/ggs-storage-secrets`.
 
 ##### Amazon [S3](https://aws.amazon.com/s3/)
 
