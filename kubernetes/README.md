@@ -24,11 +24,11 @@ To build the Docker image, use one of these methods:
 The sample geocoding application requires a Kubernetes cluster with at least one node to run the Geocoding application and a separate node for the NGINX ingress controller. This sample cluster will scale the number of nodes available for running the Geocoding application up to a maximum of 10, based on user load.
 
 ##### Amazon EKS
->To create an Amazon EKS cluster, follow the instructions in [AmazonEKSSetup.md](./cluster/eks/AmazonEKSSetup.md). 
+>To create an Amazon EKS cluster, follow the instructions in [README.md](./cluster/eks/README.md). 
 ##### Google GKE
->To create a Google GKE cluster, follow the instructions in [GoogleGKESetup.md](./cluster/gke/GoogleGKESetup.md).
+>To create a Google GKE cluster, follow the instructions in [README.md](./cluster/gke/README.md).
 ##### Microsoft AKS
->To create a Microsoft AKS cluster, follow the instructions in [MicrosoftAKSSetup.md](./cluster/aks/MicrosoftAKSSetup.md).
+>To create a Microsoft AKS cluster, follow the instructions in [README.md](./cluster/aks/README.md).
 
 ## Configure Helm
 Add the required Helm chart repositories. These repositories will be used to deploy components in the cluster:
@@ -82,7 +82,7 @@ helm repo add stable https://charts.helm.sh/stable
 
 ## Update credentials in Kubernetes secret
 
-This is required to access .spd files from cloud storage. Place all credentials related information in the `./ggs/ggs-storage-secrets` folder.  Update the `./ggs/ggs-storage-secrets/rclone.conf` file with the appropriate configuration.  This file is already populated with simple configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account json files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/usr/local/ggs-storage-secrets`.
+This is required to access .spd files from cloud storage. Place all credentials related information in the `./ggs/ggs-storage-secrets` folder.  Update the `./ggs/ggs-storage-secrets/rclone.conf` file with the appropriate configuration.  This file is already populated with simple configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account JSON files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/usr/local/ggs-storage-secrets`.
 
 ##### Amazon [S3](https://aws.amazon.com/s3/)
 
