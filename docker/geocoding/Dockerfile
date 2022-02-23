@@ -18,7 +18,7 @@ RUN cd /tmp \
     && rm -r /tmp/rclone*	
 
 FROM tomcat:8.5-alpine
-MAINTAINER Precisely
+LABEL org.opencontainers.image.authors="Precisely"
 
 RUN apk --no-cache add bc
 
