@@ -1,6 +1,6 @@
 # Sample Geocoding Application for Docker
 
-A sample Geocoding application that is containerized in Docker. This sample demonstrates the geocoding, reverse geocoding, and interactive geocoding features of the *Spectrum Global Geocoding SDK* running inside a Docker container. The Geocoding application image can then be deployed into a Kubernetes environment. For deployment instructions, see the [Geocoding Application for Kubernetes Deployment Guide](../../k8s/README.md).    
+A sample Geocoding application that is containerized in Docker. This sample demonstrates the geocoding, reverse geocoding, verify, predict, lookup and parse features of the *Spectrum Operational Addressing SDK* running inside a Docker container. The Geocoding application image can then be deployed into a Kubernetes environment. For deployment instructions, see the [Geocoding Application for Kubernetes Deployment Guide](../../k8s/README.md).    
 
 ## Prerequisites
 ### Install the client tools 
@@ -9,18 +9,18 @@ This sample requires Docker Engine to build the image.
 
 The image can be pushed to and stored in a cloud registry. Depending on the registry you publish to, determines the tool that you need to install. The Docker CLI is included in the Docker install, so a separate tool is not required for publishing images to Docker Hub.
    * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) - for publishing to Amazon ECR.
-   * [Google Cloud CLI](https://cloud.google.com/sdk) - for publishing to Google GCR.
+   * [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) - for publishing to Google GCR.
    * [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - for publishing to Microsoft ACR.
 
  ### Download the SDK & data
-   * Spectrum Global Geocoding SDK (GGS) distribution - For information about GGS, see the [Precisely Support](https://support.precisely.com/) site and the [Spectrum Spatial for Big Data](https://docs.precisely.com/docs/sftw/hadoop/landingpage/index.html) documentation landing page.
+   * Spectrum Operational Addressing SDK (OAS) distribution - For information about OAS, see the [Precisely Support](https://support.precisely.com/) site and the [Operational Addressing SDK Developer Guide](https://docs.precisely.com/docs/sftw/ggs/5.0/en/webhelp/index.html#GlobalGeocodingGuide/source/LandingPageForHelp_GGS.html) documentation.
    * Geocoding reference data in `.spd` format -  For information about Precisely's data portfolio, see the [Precisely Data Guide](https://dataguide.precisely.com/) where you can also sign up for a free account and access sample data available in [Precisely Data Experience](https://data.precisely.com/). 
 
 ## Build the Docker image
 The geocoding Docker sample contains a [Dockerfile](Dockerfile) along with startup script ([deploy-ggs.sh](deploy-ggs.sh)).
 
 1. If you haven't already, clone or download this repository to your computer. 
-2. Extract Spectrum Global Geocoding SDK (GGS) distribution's zip in `<sample-directory>/docker/geocoding/ggs` directory.
+2. Extract Spectrum Operational Addressing SDK (OAS) distribution's zip in `<sample-directory>/docker/geocoding/ggs` directory.
 3. Build & push the Docker image by executing the following command from the `<sample-directory>/docker/geocoding` directory, where: 
    - `-t [IMAGE]` - image name or ID, and optionally a tag in the ‘name:tag’ format
 	  
@@ -56,7 +56,7 @@ The geocoding Docker sample contains a [Dockerfile](Dockerfile) along with start
    ```
 
    #### Google GCR
-   Use one of the following methods to push your image to your remote repository. We’ve provided some example steps but you can refer to the [Google documentation](https://cloud.google.com/container-registry/docs/pushing-and-pulling). for additional support.
+   Use one of the following methods to push your image to your remote repository. We’ve provided some example steps but you can refer to the [Google documentation](https://cloud.google.com/container-registry/docs/pushing-and-pulling) for additional support.
 
  	Login to the GCR repository using the service account key file (Google provides multiple methods for login; for other methods, see their [documentation](https://cloud.google.com/container-registry/docs/advanced-authentication)).  
  	      	   
@@ -101,7 +101,7 @@ The geocoding Docker sample contains a [Dockerfile](Dockerfile) along with start
 
 ## Running the Docker image locally     
 ### Set up the data
-Place your data into the `/docker/geocoding/spd_files` directory. Run the appropriate command below to extract the reference data that the location the application will use at runtime.
+Place your data into the `/docker/geocoding/spd_files` directory. Run the command mentioned below to extract the reference data on the given location `/ggs_data`, that the application will use at runtime.
 
    - Windows
    
@@ -133,8 +133,8 @@ docker run -p 8080:8080 -v <sample-directory>/docker/geocoding/ggs_data:/usr/loc
  To access the web-based demo application, open the following URL in a browser: 
    http://localhost:8080/geocode
  
- The geocoding REST services are deployed at the following URL:
-  http://localhost:8080/geocode/rest/GeocodeService?_wadl
+ The Operational Addressing REST services are deployed at the following URL:
+ http://localhost:8080/geocode/rest/addressing?_wadl
 
   
 

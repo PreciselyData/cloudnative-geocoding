@@ -18,7 +18,7 @@ RUN cd /tmp \
     && rm -r /tmp/rclone*	
 
 FROM tomcat:8.5-alpine
-MAINTAINER Precisely
+LABEL author="Precisely"
 
 RUN apk --no-cache add bc
 
