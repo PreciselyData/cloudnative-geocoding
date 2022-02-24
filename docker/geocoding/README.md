@@ -9,7 +9,7 @@ This sample requires Docker Engine to build the image.
 
 The image can be pushed to and stored in a cloud registry. Depending on the registry you publish to, determines the tool that you need to install. The Docker CLI is included in the Docker install, so a separate tool is not required for publishing images to Docker Hub.
    * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) - for publishing to Amazon ECR.
-   * [Google Cloud CLI](https://cloud.google.com/sdk) - for publishing to Google GCR.
+   * [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) - for publishing to Google GCR.
    * [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - for publishing to Microsoft ACR.
 
  ### Download the SDK & data
@@ -56,7 +56,7 @@ The geocoding Docker sample contains a [Dockerfile](Dockerfile) along with start
    ```
 
    #### Google GCR
-   Use one of the following methods to push your image to your remote repository. We’ve provided some example steps but you can refer to the [Google documentation](https://cloud.google.com/container-registry/docs/pushing-and-pulling). for additional support.
+   Use one of the following methods to push your image to your remote repository. We’ve provided some example steps but you can refer to the [Google documentation](https://cloud.google.com/container-registry/docs/pushing-and-pulling) for additional support.
 
  	Login to the GCR repository using the service account key file (Google provides multiple methods for login; for other methods, see their [documentation](https://cloud.google.com/container-registry/docs/advanced-authentication)).  
  	      	   
