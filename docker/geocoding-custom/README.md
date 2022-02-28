@@ -1,6 +1,6 @@
 # Custom Geocoding for Docker Sample
 
-A sample geocoding application built using the *Spectrum Global Geocoding SDK* and Spring Boot, and packaged as a container using Docker.  This sample demonstrates a simple REST service endpoint that takes a partial address and uses the Interactive Geocoding API to find matching candidates.
+A sample geocoding application built using the *Spectrum Operational Addressing SDK* and Spring Boot, and packaged as a container using Docker.  This sample demonstrates a simple REST service endpoint that takes a partial address and uses the Addressing Predict API to find matching candidates.
 
 ## Prerequisites
 ### Install the client tools
@@ -8,16 +8,16 @@ This sample requires Docker Engine to build the image.
    * [Docker Engine](https://docs.docker.com/engine/install/)     
 
 ### Download the SDK & data
-   * Spectrum Global Geocoding SDK (GGS) distribution - For information about GGS, see the [Precisely Support](https://support.precisely.com/) site and the [Spectrum Spatial for Big Data](https://docs.precisely.com/docs/sftw/hadoop/landingpage/index.html) documentation landing page.
+   * Spectrum Operational Addressing SDK (OAS) distribution - For information about OAS, see the [Precisely Support](https://support.precisely.com/) site and the [Operational Addressing SDK Developer Guide](https://docs.precisely.com/docs/sftw/ggs/5.0/en/webhelp/index.html#GlobalGeocodingGuide/source/LandingPageForHelp_GGS.html) documentation.
    * Geocoding reference data in `.spd` format -  For information about Precisely's data portfolio, see the [Precisely Data Guide](https://dataguide.precisely.com/) where you can also sign up for a free account and access sample data available in [Precisely Data Experience](https://data.precisely.com/).
 
 ## Setup instructions
 1. If you haven't already, clone or download this repository to your computer.
-2.  Place your GGS distribution into the `{project}/lib` directory and execute:
+2.  Place your OAS distribution into the `{project}/lib` directory and execute:
         
         gradlew extractGGSDist
 
-    This will unzip your GGS distribution into the `{project}/src/main/jib/var/lib/ggs` directory.
+    This will unzip your OAS distribution into the `{project}/src/main/jib/var/lib/ggs` directory.
     * Everything under `{project}/src/main/jib` will be included in the Docker image.
 3. Place your Interactive geocoding dataset, in SPD format, into the `{project}/data` directory.
     * The `{project}/data` directory will not be included in the Docker image, and will need to be provided to the container at runtime.
@@ -25,7 +25,7 @@ This sample requires Docker Engine to build the image.
 ## Build the sample application
 The sample is bundled with a gradle build script to help build, test, and package the project. There are several tasks associated with local development that can be helpful:
 * Unit tests can be executed using: `gradlew test`
-* The web service can be executed locally using: `gradlew bootRun` after which the service can be accessed locally with a URL, such as: http://localhost:8080/geocoding/suggest/usa?input=350%20jordan 
+* The web service can be executed locally using: `gradlew bootRun` after which the service can be accessed locally with a URL, such as: http://localhost:8080/addressing/predict/usa?input=350%20jordan 
     
 
   Your service is ready to access when you see the following console message after executing `gradlew bootRun`:
@@ -61,9 +61,9 @@ docker run -p 8080:8080 -v c:\geocoding-samples\docker\geocoding-custom\data:/mn
 ```
 ### Access the application
  To access the demo web service, open the following URL in a browser: 
- `http://localhost:8080/geocoding/suggest/<country>?input=<address>` 
+ `http://localhost:8080/addressing/predict/<country>?input=<address>` 
  
 For example:
-    http://localhost:8080/geocoding/suggest/usa?input=350%20jordan 
+    http://localhost:8080/addressing/predict/usa?input=350%20jordan 
  
  

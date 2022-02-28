@@ -3,16 +3,18 @@ package com.pb.bigdata.sample;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.mapinfo.geocode.GeocodeAddress;
-import com.mapinfo.geocode.GeocodingException;
-import com.mapinfo.geocode.api.Address;
-import com.mapinfo.geocode.api.Candidate;
-import com.mapinfo.geocode.api.InteractiveGeocodingAPI;
-import com.mapinfo.geocode.api.Response;
-import com.pb.geocoding.config.ConfigCountry;
-import com.pb.geocoding.config.ConfigurationBuilder;
-import com.pb.geocoding.config.api.GeocodingConfiguration;
-import com.pb.geocoding.interactive.InteractiveBuilder;
+
+import com.precisely.addressing.v1.Addressing;
+import com.precisely.addressing.v1.AddressingException;
+import com.precisely.addressing.v1.model.RequestAddress;
+import com.precisely.addressing.v1.model.PredictionResult;
+import com.precisely.addressing.v1.model.PredictionResponse;
+import com.precisely.addressing.v1.model.PreferencesBuilder;
+import com.precisely.addressing.AddressingBuilder;
+import com.precisely.addressing.configuration.AddressingConfiguration;
+import com.precisely.addressing.configuration.AddressingConfigurationBuilder;
+import com.precisely.addressing.configuration.datasources.SpdDataSourceBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,9 +30,10 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Arrays;
 
 @RestController
-@RequestMapping("/geocoding")
+@RequestMapping("/addressing")
 public final class GeocodeService {
 	private static final Logger LOG = LoggerFactory.getLogger(GeocodeService.class);
 
@@ -46,32 +49,32 @@ public final class GeocodeService {
 	@Value("${ggs.usa.pool.max.active:0}")
 	private int m_usaPoolMaxActive;
 
-	private InteractiveGeocodingAPI m_interactiveGeocoder;
+	private Addressing m_addressing;
 
-	@RequestMapping(value = "/suggest/{country}", method = RequestMethod.GET, produces = {"application/json"})
-	public List<Candidate> suggest(@PathVariable String country, @RequestParam String input) {
-		Address address = new GeocodeAddress();
-		address.setMainAddressLine(input);
+	@RequestMapping(value = "/predict/{country}", method = RequestMethod.GET, produces = {"application/json"})
+	public List<PredictionResult> suggest(@PathVariable String country, @RequestParam String input) {
+		RequestAddress address = new RequestAddress();
+		address.setAddressLines(Arrays.asList(input));
 		address.setCountry(country);
 
 		try {
-			Response response = m_interactiveGeocoder.suggest(address, null);
-			return response.getCandidates();
-		} catch (GeocodingException e) {
+			PredictionResponse response = m_addressing.predict(address, new PreferencesBuilder().withMaxResults(5).build());
+			return response.getPredictions();
+		} catch (AddressingException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@PostConstruct
 	private void initializeInteractiveGeocoder() throws Exception {
-		GeocodingConfiguration geocodingConfiguration = new ConfigurationBuilder()
-				.withResourcesPath(Paths.get(m_geocodingResourcesDir))
-				.withDataPath(Paths.get(m_geocodingDataPath))
+		AddressingConfiguration addressingConfiguration = new AddressingConfigurationBuilder()
+				.withResources(Paths.get(m_geocodingResourcesDir))
+				.withData(new SpdDataSourceBuilder().withSpdPaths(Paths.get(m_geocodingDataPath)).build())
 				.build();
 
-		ConfigCountry usaConfig = geocodingConfiguration.getConfigByCountry("USA");
+		Map<String, String> usaConfig = addressingConfiguration.getConfiguration("USA");
 		if(usaConfig != null){
-			Map<String, String> usaSettings =  usaConfig.getProperties();
+			Map<String, String> usaSettings =  usaConfig;
 			usaSettings.put("REMOTE", m_ggsRemote);
 			if(m_usaPoolMaxActive == 0){
 				m_usaPoolMaxActive = (int) Math.ceil(Runtime.getRuntime().availableProcessors() * 1.5);
@@ -79,23 +82,24 @@ public final class GeocodeService {
 			usaSettings.put("POOL_MAX_ACTIVE", String.valueOf(m_usaPoolMaxActive));
 		}
 
-		m_interactiveGeocoder = new InteractiveBuilder()
-		.withConfiguration(geocodingConfiguration)
-		.build();
+		m_addressing = new AddressingBuilder()
+				.withConfiguration(addressingConfiguration)
+				.build();
 
 		LOG.info(String.format("Interactive geocoder initialized with settings [REMOTE: %s, POOL_MAX_ACTIVE: %s]",
 				m_ggsRemote, m_usaPoolMaxActive));
 	}
 
 	@JsonComponent
-	private static class CandidateJsonSerializer extends JsonSerializer<Candidate> {
+	private static class PredictionResultJsonSerializer extends JsonSerializer<PredictionResult> {
 
 		@Override
-		public void serialize(Candidate value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-			//output a limited set of data from the candidate
+		public void serialize(PredictionResult value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+			//output a limited set of data from the PredictionResult
 			gen.writeStartObject();
-			gen.writeStringField("formattedStreetAddress", value.getFormattedStreetAddress());
-			gen.writeStringField("formattedLocationAddress", value.getFormattedLocationAddress());
+			gen.writeStringField("prediction", value.getPrediction());
+			gen.writeStringField("formattedStreetAddress", value.getAddress().getFormattedStreetAddress());
+			gen.writeStringField("formattedLocationAddress", value.getAddress().getFormattedLocationAddress());
 			gen.writeEndObject();
 		}
 	}

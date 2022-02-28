@@ -22,7 +22,7 @@ public final class GeocodeServiceTest {
 
 	@Test
 	public void confirmSuggestWorks() throws Exception {
-		mockMvc.perform(get("/geocoding/suggest/{country}", "usa")
+		mockMvc.perform(get("/addressing/predict/{country}", "usa")
 				.param("input", "350 jordan")
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
