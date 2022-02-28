@@ -8,7 +8,7 @@ This sample requires Docker Engine to build the image.
    * [Docker Engine](https://docs.docker.com/engine/install/)     
 
 ### Download the SDK & data
-   * Spectrum Operational Addressing SDK (OAS) distribution - For information about OAS, see the [Precisely Support](https://support.precisely.com/) site and the [Spectrum Spatial for Big Data](https://docs.precisely.com/docs/sftw/hadoop/landingpage/index.html) documentation landing page.
+   * Spectrum Operational Addressing SDK (OAS) distribution - For information about OAS, see the [Precisely Support](https://support.precisely.com/) site and the [Operational Addressing SDK Developer Guide](https://docs.precisely.com/docs/sftw/ggs/5.0/en/webhelp/index.html#GlobalGeocodingGuide/source/LandingPageForHelp_GGS.html) documentation.
    * Geocoding reference data in `.spd` format -  For information about Precisely's data portfolio, see the [Precisely Data Guide](https://dataguide.precisely.com/) where you can also sign up for a free account and access sample data available in [Precisely Data Experience](https://data.precisely.com/).
 
 ## Setup instructions
