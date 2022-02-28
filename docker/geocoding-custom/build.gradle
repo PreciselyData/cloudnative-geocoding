@@ -1,4 +1,4 @@
-import static groovy.io.FileType.FILES
+gradlew import static groovy.io.FileType.FILES
 
 plugins {
 	id 'com.google.cloud.tools.jib' version '2.5.0'
@@ -23,7 +23,7 @@ wrapper {
 jib.container.creationTime= 'USE_CURRENT_TIMESTAMP'
 
 dependencies {
-	implementation "com.pb.geocoding:geocoding-api:$ggs_version"
+	implementation "com.precisely.addressing:addressing-api:$ggs_version"
 	implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
 
 	testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
