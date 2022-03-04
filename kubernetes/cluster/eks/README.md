@@ -1,28 +1,28 @@
 # Amazon EKS Cluster Setup Guide 
-The Amazon Elastic Kubernetes Service (EKS) is a fully managed Kubernetes service. This readme provides the steps to create an EKS cluster to deploy the Geocoding application built with Spectrum Global Geocoding SDK.
+The Amazon Elastic Kubernetes Service (EKS) is a fully managed Kubernetes service. This readme provides the steps to create an EKS cluster to deploy the Geocoding application built with *Spectrum Operational Addressing SDK*.
 
 ## Prerequisites
 
-The Geocoding sample on Amazon EKS requires acess to [S3](https://aws.amazon.com/s3/) and [Amazon Elastic Container Registry (ECR)](https://docs.aws.amazon.com/AmazonECR/latest/userguide/Registries.html). AWS S3 is used to store the reference datasets, and the AWS ECR repository contains the Geocoding application Docker image which is used by the application during runtime. 
+The Geocoding sample on Amazon EKS requires access to [S3](https://aws.amazon.com/s3/) and [Amazon Elastic Container Registry (ECR)](https://docs.aws.amazon.com/AmazonECR/latest/userguide/Registries.html). AWS S3 is used to store the reference datasets, and the AWS ECR repository contains the Geocoding application Docker image which is used by the application during runtime. 
 
 To run the Geocoding application in EKS requires permissions on these AWS resources along with some others listed below.
 
 ### AWS IAM Permissions
 To deploy the Geocoding application on an EKS cluster, make sure you have the necessary permissions listed below:
 
-   * Permissions to create and manage the EKS cluster
-   * [AmazonEKSClusterPolicy](https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html)
-   * [Docker image push/pull permissions](https://docs.aws.amazon.com/AmazonECR/latest/userguide/ECR_on_EKS.html) on AWS ECR 
-   * [Permissions to create the file system, mount the target, and read/write on EFS](https://docs.aws.amazon.com/efs/latest/ug/access-control-managing-permissions.html) 
-   * [Read/write permissions](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_s3_rw-bucket.html) on Amazon S3
+   * [Permissions to create/manage the Clusters](https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html)
+   * [Permissions to create/manage the Nodes](https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html)
+   * [Permissions to push/pull the Docker Images](https://docs.aws.amazon.com/AmazonECR/latest/userguide/ECR_on_EKS.html) 
+   * [Permissions to create the File System, mount the target, and read/write on EFS](https://docs.aws.amazon.com/efs/latest/ug/access-control-managing-permissions.html) 
+   * [Permissions to Read/Write the data on S3](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_examples_s3_rw-bucket.html)
 
 ## Create the cluster	
 Before starting the following steps, make sure you have installed the required tools listed in [Install client tools](../../README.md). 
 
-In the sample, we are using `ggs-cluster` for the cluster name, and `us-east-1` for the region. You can change these values for your environment in the [create-eks-cluster.yaml](create-eks-cluster.yaml) and [cluster-autoscaler.yaml](cluster-autoscaler.yaml) manifest files.
+In the sample, we are using `ggs-cluster` as the cluster name, and `us-east-1` as the region. You can change these values for your environment in the [create-eks-cluster.yaml](create-eks-cluster.yaml) and [cluster-autoscaler.yaml](cluster-autoscaler.yaml) deployment manifest files.
 
 ### Create the EKS cluster 
-Before running the `eksctl` command, make sure that you have authenticated to AWS and valid AWS credentials are configured. If your AWS credentials haven't been configured, then use the following command and provide the required input:
+Before running the `eksctl` command, make sure that you have authenticated to AWS and valid AWS credentials are configured. If your AWS credentials haven't been configured, then proceed with the following command:
 ```
 aws configure
 ```
