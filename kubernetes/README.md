@@ -1,5 +1,5 @@
 # Geocoding Application for Kubernetes Deployment Guide
-This guide provides detailed instructions for deploying the sample Spectrum Global Geocoding application in a Kubernetes environment.
+This guide provides detailed instructions for deploying the sample Spectrum Operational Addressing application in a Kubernetes environment.
 
 ## Install client tools
 To deploy the Geocoding application in a Kubernetes environment, install the following client tools that are applicable to your environment:
@@ -14,9 +14,9 @@ To deploy the Geocoding application in a Kubernetes environment, install the fol
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
 ## Deploy the Geocoding application Docker image
-The Geocoding application is packaged as a Docker image and should be deployed to an accessible container registry, such as [Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/Registries.html) for EKS, or on [Google GCR](https://cloud.google.com/container-registry) registry for GKE, or on [Azure ACR](https://azure.microsoft.com/en-in/services/container-registry/) registry for Microsoft AKS.
+The Geocoding application is packaged as a Docker image and should be deployed to an accessible container registry, such as [Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/Registries.html) for [EKS](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html), or on [Google GCR](https://cloud.google.com/container-registry) for [GKE](https://cloud.google.com/kubernetes-engine), or on [Azure ACR](https://azure.microsoft.com/en-in/services/container-registry/) for [AKS](https://azure.microsoft.com/en-in/services/kubernetes-service/).
 
-To build the Docker image, use one of these methods:
+To build the Docker image, use one of the following methods:
 - To build using the provided Spectrum Global Geocoding REST APIs, see [docker/geocoding](../docker/geocoding)
 - To build a custom application using Spectrum Global Geocoding Java SDK, see [docker/geocoding-custom](../docker/geocoding-custom)
 
@@ -33,28 +33,26 @@ The sample geocoding application requires a Kubernetes cluster with at least one
 ## Configure Helm
 Add the required Helm chart repositories. These repositories will be used to deploy components in the cluster:
 ```
-helm repo add stable https://kubernetes-charts.storage.googleapis.com
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add stable https://charts.helm.sh/stable
-
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 ```
 ## Deploy the NGINX Ingress Controller and Prometheus-Adapter with Prometheus
    The Geocoding application uses the NGINX Ingress Controller as a load balancer in order to monitor the number of active users. In addition,  Prometheus-Adapter is installed along with Prometheus Server in order to provide this data as custom metrics in Kubernetes, which the Geocoding application uses to autoscale. 
    1. Install Prometheus Server using Helm:      
       ```
-      helm install prometheus stable/prometheus
+      helm install prometheus prometheus-community/prometheus
       ```
         
    2. Install Prometheus-Adapter using Helm:
       
       ```
-      helm install prometheus-adapter stable/prometheus-adapter  -f ./ggs-ingress/prometheus-adapter/values.yaml
+      helm install prometheus-adapter prometheus-community/prometheus-adapter  -f ./ggs-ingress/prometheus-adapter/values.yaml
       ```
    3. Install the NGINX Ingress Controller by executing this command:
         
       ```
       helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-      helm install nginx-ingress ingress-nginx/ingress-nginx -f ./ggs-ingress/nginx-ingress-controller/values.yaml --version "2.16.0" 
+      helm install nginx-ingress ingress-nginx/ingress-nginx -f ./ggs-ingress/nginx-ingress-controller/values.yaml 
       ```
       
       Wait for all pods to come up in a running state; it generally takes 2 to 5 minutes.
@@ -70,7 +68,7 @@ helm repo add stable https://charts.helm.sh/stable
       - When the NGINX Ingress Controller is running properly, you will see the output below. You can now proceed to the next step.
 
         ```
-        {"kind":"ExternalMetricValueList","apiVersion":"external.metrics.k8s.io/v1beta1","metadata":{"selfLink":"/apis/external.metrics.k8s.io/v1beta1/namespaces/default/nginx_active_connections"},"items":[{"metricName":"nginx_active_connections","metricLabels":{},"timestamp":"2020-04-28T10:48:44Z","value":"1"}]}
+        {"kind":"ExternalMetricValueList","apiVersion":"external.metrics.k8s.io/v1beta1","metadata":{"selfLink":"/apis/external.metrics.k8s.io/v1beta1/namespaces/default/nginx_active_connections"},"items":[{"metricName":"nginx_active_connections","metricLabels":{},"timestamp":"2020-04-28T10:48:44Z","value":"7"}]}
         ```       
       - If the command displays the following output message, it means Prometheus-Adapter is not running. Check its status and wait until it is up before retrying.
         >`Error from server (NotFound): the server could not find the requested resource`
@@ -140,13 +138,13 @@ Execute these commands:
    ```
 
 ## Deploy the Geocoding application
-Spectrum Global Geocoding requires the reference data to be available on the file system of the pod running the geocoding service. Due to the size of the reference data, the data is managed outside of the docker image and configured during deployment.  Two options for configuring the reference data are provided:
+Spectrum Operational Addressing SDK requires the reference data to be available on the file system of the pod running the geocoding service. Due to the size of the reference data, the data is managed outside of the docker image and configured during deployment. Two options for configuring the reference data are provided:
 
 - Option A: The reference data is initialized on an [emptyDir volume](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
 - Option B: The reference data is initialized on a [persistent volume](https://kubernetes.io/docs/concepts/storage/volumes/#nfs)
 
 #### Option A: Reference data is initialized on an emptyDir volume
-This is the simplest approach to deploy the Geocoding application. During startup, a geocoding pod copies the data from Cloud Storage (S3 or GS) to an emptyDir volume that's mounted to a local directory.
+This is the simplest approach to deploy the Geocoding application. During startup, a geocoding pod copies the data from Cloud Storage (S3 or GS or AFS) to an emptyDir volume that's mounted to a local directory.
 
 **Note**: Each new geocoding pod copies the data from the storage bucket to the local directory. This increases the pod startup time, so this approach may not be appropriate for production usage where faster startup time is required.
 
@@ -154,7 +152,7 @@ Steps to deploy:
 
   1. Add the Geocoding application Docker image URI.
      
-     For `Google GKE` or `Amazon EKS` use `./ggs/local-data/ggs-runtime.yaml` file, but for `Microsoft AKS` use `./ggs/local-data/ggs-runtime.yaml` file. In the file, replace:
+     For this, move to the `./ggs/local-data/ggs-runtime.yaml` file and replace:
      - `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the Docker repository in the `image` parameter. The `@IMAGE_URI@` parameter needs to be replaced in two places.
       ```
           initContainers:
@@ -180,7 +178,7 @@ This approach minimizes pod startup time by preparing the reference data ahead o
   2. Deploy the geocoding application using the data from the persistent volume.
 
  #### 1. Configure the persistent volume with reference data
- This sample demonstrates configuring a persistent volume backed by high performance cloud based file storage.  Though the steps outlined are written for specific products (`Amazon EFS`, `Google Filestore`, `Azure Files`), the process is generally applicable for other persistent volume types. Follow the steps below based on your platform.
+ This sample demonstrates configuring a persistent volume backed by high performance cloud based file storage.  Though the steps outlined are written for specific products (`Amazon EFS`, `Google Filestore`, `Azure Files`), the process is generally applicable for other persistent volume types as well. Follow the steps below based on your platform.
  ##### Amazon EKS
  >To deploy the geocoding reference data using [Amazon Elastic File System](https://aws.amazon.com/efs/), follow the instructions in [AmazonEKSReferenceData.md](./ggs/nfs-data/AmazonEKSReferenceData.md). 
  ##### Google GKE
@@ -209,8 +207,8 @@ The Geocoding application uses the same persistent volume where you deployed the
       kubectl apply -f ./ggs/nfs-data/aks/ggs-data-pv.yaml
       ```
 
-      - In the `./ggs/nfs-data/ggs-runtime.yaml` file, replace:
-      -  `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the Docker repository in the `image` parameter.
+   - In the `./ggs/nfs-data/ggs-runtime.yaml` file, replace:
+     - `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the Docker repository in the `image` parameter.
    
    - Deploy the Geocoding application runtime:
      ```
@@ -224,7 +222,7 @@ Retrieve the Ingress service address which exposes the Geocoding application to 
   ```
   kubectl  get services -o wide -w nginx-ingress-ingress-nginx-controller
    ```
-Copy the external IP/URL and port of the Ingress service, and then create the Geocoding application test page URL: 
+Copy the External IP/URL and Port of the Ingress service, and then create the Geocoding application test page URL: 
               
   `http://<External-IP>:<port>/geocode`                
               

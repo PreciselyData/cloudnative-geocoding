@@ -1,6 +1,6 @@
 image:
   repository: directxman12/k8s-prometheus-adapter-amd64
-  tag: v0.6.0
+  tag: v0.8.4
   pullPolicy: IfNotPresent
 
 # Url to access prometheus
