@@ -17,8 +17,8 @@ To deploy the Geocoding application in a Kubernetes environment, install the fol
 The Geocoding application is packaged as a Docker image and should be deployed to an accessible container registry, such as [Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/Registries.html) for [EKS](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html), or on [Google GCR](https://cloud.google.com/container-registry) for [GKE](https://cloud.google.com/kubernetes-engine), or on [Azure ACR](https://azure.microsoft.com/en-in/services/container-registry/) for [AKS](https://azure.microsoft.com/en-in/services/kubernetes-service/).
 
 To build the Docker image, use one of the following methods:
-- To build using the provided Spectrum Global Geocoding REST APIs, see [docker/geocoding](../docker/geocoding)
-- To build a custom application using Spectrum Global Geocoding Java SDK, see [docker/geocoding-custom](../docker/geocoding-custom)
+- To build using the provided Spectrum Operational Addressing REST APIs, see [docker/geocoding](../docker/geocoding)
+- To build a custom application using Spectrum Operational Addressing Java SDK, see [docker/geocoding-custom](../docker/geocoding-custom)
 
 ## Create the Kubernetes cluster
 The sample geocoding application requires a Kubernetes cluster with at least one node to run the Geocoding application and a separate node for the NGINX ingress controller. This sample cluster will scale the number of nodes available for running the Geocoding application up to a maximum of 10, based on user load.
