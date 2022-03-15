@@ -1,4 +1,4 @@
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: ggs-hpa
@@ -8,8 +8,11 @@ spec:
   metrics:
   - type: External
     external:
-      metricName: nginx_active_connections
-      targetAverageValue: 12
+      metric:
+        name: nginx_active_connections
+      target:
+        type: AverageValue
+        averageValue: 12
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
