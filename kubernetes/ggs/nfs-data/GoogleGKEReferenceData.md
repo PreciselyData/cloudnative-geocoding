@@ -13,20 +13,20 @@ To create a Filestore instance for the Geocoding application:
 
 - Configure the GCP project ID that will be used to create the Filestore instance; otherwise, you will need to provide this project ID in every command:
   ```
-  gcloud config set project ggs-demo
+  gcloud config set project oas-demo
   ```
 
 - Locate the VPC network of your cluster - the Filestore instance and GKE cluster must be in the same network to access the data from them in the cluster:
   ```
-  gcloud container clusters describe ggs-sample --zone us-east1-c --format="value(network)"
+  gcloud container clusters describe oas-sample --zone us-east1-c --format="value(network)"
   ```
   Your output should be similar to this:
   ```
   default
   ```
-- Locate the compute zone of your cluster; this is also required to create a Filestore instance:
+- Locate the compute zone of your cluster, this is also required to create a Filestore instance:
   ```
-  gcloud container clusters describe ggs-sample --zone us-east1-c --format="value(location)"
+  gcloud container clusters describe oas-sample --zone us-east1-c --format="value(location)"
   ```
 
   Output
@@ -36,32 +36,33 @@ To create a Filestore instance for the Geocoding application:
 
 - Create the Filestore instance using the retrieved values: 
   ```
-  gcloud filestore instances create ggs-data --zone us-east1-c --network=name=default --file-share=name=ggs_data,capacity=1TB 
+  gcloud filestore instances create oas-data --zone us-east1-c --network=name=default --file-share=name=oas_data,capacity=1TB 
   ```
   **Note:** Uppercase and hyphen ('-') are not allowed values for `--file-share`; however, using an underscore ('_') is supported. Google requires a minimum capacity of 1 TB. 
   Creating the Filestore instance takes a few minutes. When the command completes, you can verify that your Filestore instance was created: 
   ```
-  gcloud filestore instances describe ggs-data --zone us-east1-c
+  gcloud filestore instances describe oas-data --zone us-east1-c
   ```
   Your output should be similar to this:
   ```
    createTime: '2020-08-18T10:13:20.387685657Z'
    fileShares:
    - capacityGb: '1024'
-     name: ggs_data
-   name: projects/ggs-demo/locations/us-east1-c/instances/ggs-data
+     name: oas_data
+   name: projects/oas-demo/locations/us-east1-c/instances/oas-data
    networks:
+   - connectMode: DIRECT_PEERING
    - ipAddresses:
      - 10.13.31.106
      network: default
      reservedIpRange: 10.13.31.104/29
    state: READY
-   tier: STANDARD
+   tier: BASIC_HDD
    ```
 #### 2. Update the persistent volume resource definition to use your EFS file system.
 - Locate the IP address of your Filestore instance:
    ```
-   gcloud filestore instances describe ggs-data --zone us-east1-c --format="value(networks[0].ipAddresses[0])"
+   gcloud filestore instances describe oas-data --zone us-east1-c --format="value(networks[0].ipAddresses[0])"
    ```
   Your output should be similar to this:
   ```
@@ -70,16 +71,16 @@ To create a Filestore instance for the Geocoding application:
 - Locate the NFS path (the name) of your Filestore instance:
   
   ```
-  gcloud filestore instances describe ggs-data --zone us-east1-c --format="value(fileShares[0].name)"
+  gcloud filestore instances describe oas-data --zone us-east1-c --format="value(fileShares[0].name)"
   ```
   Your output should be similar to this:
   ```
-  ggs_data
+  oas_data
    ```
 - In the `./ggs/nfs-data/gke/ggs-data-pv.yaml` file, update the Filestore path and IP address:
   ```
   nfs:
-    path: /ggs_data
+    path: /oas_data
     server: 10.231.81.122
   ```  
 **Note:** The path of the data that you are going to use must exist on Filestore.
