@@ -1,6 +1,6 @@
 # Geocoding Deployment for Kubernetes
 
-This sample demonstrates the deployment of the Spectrum Global Geocoding API in a cloud native environment.  It provides elastic REST endpoints for geocoding, reverse geocoding, interactive geocoding, and key lookup that scale based on the number of active connections.
+This sample demonstrates the deployment of the Spectrum Operational Addressing API in a cloud native environment.  It provides elastic REST endpoints for geocoding, reverse geocoding, verify, predict, lookup and parse that scale based on the number of active connections.
 
 - [Geocoding Application](#geocoding-application)
   - [Features](#features)
@@ -16,14 +16,16 @@ This sample demonstrates the deployment of the Spectrum Global Geocoding API in 
 
 # Geocoding Application
 
-The Spectrum Global Geocoding SDK (GGS) provides the following capabilities, which are available as REST web services in the Geocoding application:
+The Spectrum Operational Addressing SDK (OAS) provides the following capabilities, which are available as REST web services in the Geocoding application:
 
--   **Geocode Service** - performs forward geocoding using input addresses and returning location data and other information.
--   **Reverse Geocode Service** - performs reverse geocoding using input coordinates and returns address information that is the best match for that point.
--   **Interactive Service** - suggests addresses and place names as you type.
--  **Key Lookup Service** - returns geocoded candidates when given a unique key. It is a more efficient method than matching with an address, as the key is unique to that address. Spectrum Global Geocoding supports the PreciselyID unique identifier for US data and the G-NAF key for Australian data.
+- **Verify Service** - performs address verification and standardization using the specified processing engine.
+- **Geocode Service** - performs forward geocoding using input addresses and returning location data and other information.
+- **Predict Service**: suggests addresses and place names as you type.
+- **Reverse Geocode Service** - performs reverse geocoding using input coordinates and returns address information that is the best match for that point.
+- **Lookup Service**: returns geocoded candidates when given a unique key.
+- **Parse Service**: returns the parsed result of an input address.
 
-**Note**: The sample requires using Spectrum Global Geocoding SDK (GGS) version 3.1.71 or above.
+**Note**: The sample requires using Spectrum Operational Addressing SDK (OAS) version 5.1.0 or above.
 
 ## Features
 -   Options that allow control of the searching and matching options, output results, and other preferences
@@ -31,11 +33,11 @@ The Spectrum Global Geocoding SDK (GGS) provides the following capabilities, whi
 -   Load balancing
 -   Cluster and pod autoscaling
 
-For complete Global Geocoding SDK documentation, see the [GGS REST and Java API Developer Guide](https://support.pb.com/help/ggs/3.0/en/webhelp/index.html).
+For complete Operational Addressing SDK documentation, see the [Operational Addressing SDK Developer Guide](https://docs.precisely.com/docs/sftw/ggs/5.0/en/webhelp/index.html).
 
 # Architecture
 
-The diagrams in this section illustrate the architecture of the Geocoding application deployed in a AWS-hosted environment. The architecture and functionality is similar in the Google Cloud environment except for the naming of some of the cluster components. 
+The diagrams in this section illustrate the architecture of the Geocoding application deployed in a AWS-hosted environment. The architecture and functionality is similar in the Google Cloud and Microsoft Azure environments except for the naming of some of the cluster components. 
 
 ## Cluster components
 
