@@ -1,11 +1,11 @@
 # Google GKE Cluster Setup Guide
 
-Google Kubernetes Engine (GKE) is Google's secured and managed Kubernetes service with four-way autoscaling and multi-cluster support. This readme provides the steps to create a GKE cluster to deploy the Geocoding application built with Spectrum Operational Addressing SDK. 
+[Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine) is Google's secured and managed Kubernetes service with four-way autoscaling and multi-cluster support. This readme provides the steps to create a GKE cluster to deploy the Geocoding application built with *Spectrum Operational Addressing SDK*. 
 
 ## Prerequisites
 The Geocoding sample on Google GKE requires access to [Cloud Storage buckets](https://cloud.google.com/storage/docs/creating-buckets) and [Google Container Registry (GCR)](https://cloud.google.com/container-registry). Google Cloud Storage (GS) is used to store the reference datasets, and the GCR repository contains the Geocoding application's Docker image which is used for the deployment. 
 
-To run the Geocoding application on GKE requires permissions on these Google Cloud resources along with some others listed below.
+Running the Geocoding application on GKE requires permissions on these Google Cloud resources along with some others listed below.
 
 ### GCP IAM Permissions
 To deploy the Geocoding application on a GKE cluster, make sure you have the following IAM roles and permissions:

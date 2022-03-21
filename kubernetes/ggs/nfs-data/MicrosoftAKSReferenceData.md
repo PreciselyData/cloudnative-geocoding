@@ -13,7 +13,7 @@ helm repo add azurefile-csi-driver https://raw.githubusercontent.com/kubernetes-
 helm repo update
 helm install azurefile-csi-driver azurefile-csi-driver/azurefile-csi-driver --namespace kube-system --set cloud=AzureStackCloud
 ```
-Note: From AKS 1.21, Azure Disk and Azure File CSI drivers would be installed by default, so you can directly move on to the next step.
+**Note:** From AKS 1.21, Azure Disk and Azure File CSI drivers would be installed by default, so you can directly move on to the next step.
 
 #### 2. Create the Azure Files storage
 If you have already created & configured an instance of the Azure Files share, and it is accessible from your AKS cluster, then you can ignore this step and move to the next step.

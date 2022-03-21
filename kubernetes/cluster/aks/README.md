@@ -1,6 +1,6 @@
 # Azure AKS Cluster Setup Guide
 
-[Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) is Microsoft's secured and managed Kubernetes service. This readme provides the steps to create a AKS cluster to deploy the Geocoding application built with Spectrum Operational Addressing SDK. 
+[Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-in/services/kubernetes-service/) is Microsoft's secured and managed Kubernetes service. This readme provides the steps to create a AKS cluster to deploy the Geocoding application built with *Spectrum Operational Addressing SDK*. 
 
 ## Prerequisites
 The Geocoding sample on Microsoft AKS requires access to [Azure Files Storage](https://azure.microsoft.com/en-in/services/storage/files/), [Azure Container Registry (ACR)](https://azure.microsoft.com/en-us/services/container-registry/) and [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/). Azure Blob Storage is used to store the reference datasets in .spd file format, and the ACR repository contains the Geocoding application's Docker image which is used for the deployment. 

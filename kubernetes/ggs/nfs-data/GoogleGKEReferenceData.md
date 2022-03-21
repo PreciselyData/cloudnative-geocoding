@@ -1,5 +1,5 @@
 # Geocoding Reference Data on Google Filestore
-This sample demonstrates using a [persistent volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) backed by [Google Filestore](https://cloud.google.com/filestore)  to store the reference data which will be accessed by the Geocoding application at runtime. To initialize the persistent volume it is mounted to a separate, temporary, deployment of the Geocoding application – the “staging” deployment.  When the staging deployment starts, the data is copied from [Google Cloud Storage](https://cloud.google.com/storage) and extracted to the persistent volume.  Once the data has been initialized, the staging deployment can be stopped and the temporary resources deleted.  The Geocoding application will then access the reference data by mounting the same persistent volume that had just been initialized by the staging deployment.
+This sample demonstrates using a [persistent volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) backed by [Google Filestore](https://cloud.google.com/filestore)  to store the reference data which will be accessed by the Geocoding application at runtime. To initialize the persistent volume, it is mounted to a separate, temporary, deployment of the Geocoding application – the “staging” deployment.  When the staging deployment starts, the data is copied from [Google Cloud Storage](https://cloud.google.com/storage) and extracted to the persistent volume.  Once the data has been initialized, the staging deployment can be stopped and the temporary resources can be deleted.  The Geocoding application will then access the reference data by mounting the same persistent volume that had just been initialized by the staging deployment.
 
 This reference data deployment process needs to be executed only once for the Geocoding application deployment. You only need to re-run it when you want to update the deployed data, such as with a new vintage, or if you want to add support for additional countries.  At that time, you can use the staging process to prepare a new, separate, persistent volume and then update your running deployment of the Geocoding application to use that new persistent volume with zero application downtime.
 
@@ -7,7 +7,7 @@ This reference data deployment process needs to be executed only once for the Ge
 
 #### 1. Create a Filestore instance.
 The following directions will guide you through the process of preparing a Filestore instance for your deployment by using the gcloud CLI.  If you have already created and configured a Filestore instance that you want to use, and it is accessible from your GKE cluster, then you can skip this step and move on to the next. For more information about creating an instance of Google Filestore, refer to the documentation at:
-https://cloud.google.com/filestore/docs/creating-instances
+[Creating Instances](https://cloud.google.com/filestore/docs/creating-instances).
 
 To create a Filestore instance for the Geocoding application:
 
