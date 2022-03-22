@@ -1,11 +1,11 @@
 # Amazon EKS Cluster Setup Guide 
-The Amazon Elastic Kubernetes Service (EKS) is a fully managed Kubernetes service. This readme provides the steps to create an EKS cluster to deploy the Geocoding application built with *Spectrum Operational Addressing SDK*.
+The [Amazon Elastic Kubernetes Service (EKS)](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html) is a fully managed Kubernetes service. This readme provides the steps to create an EKS cluster to deploy the Geocoding application built with *Spectrum Operational Addressing SDK*.
 
 ## Prerequisites
 
 The Geocoding sample on Amazon EKS requires access to [S3](https://aws.amazon.com/s3/) and [Amazon Elastic Container Registry (ECR)](https://docs.aws.amazon.com/AmazonECR/latest/userguide/Registries.html). AWS S3 is used to store the reference datasets, and the AWS ECR repository contains the Geocoding application Docker image which is used by the application during runtime. 
 
-To run the Geocoding application in EKS requires permissions on these AWS resources along with some others listed below.
+Running the Geocoding application in EKS requires permissions on these AWS resources along with some others listed below.
 
 ### AWS IAM Permissions
 To deploy the Geocoding application on an EKS cluster, make sure you have the necessary permissions listed below:

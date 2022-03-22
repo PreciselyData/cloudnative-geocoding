@@ -1,5 +1,5 @@
 # Geocoding Application for Kubernetes Deployment Guide
-This guide provides detailed instructions for deploying the sample Spectrum Operational Addressing application in a Kubernetes environment.
+This guide provides detailed instructions for deploying the sample Spectrum Operational Addressing API in a Kubernetes environment.
 
 ## Install client tools
 To deploy the Geocoding application in a Kubernetes environment, install the following client tools that are applicable to your environment:
@@ -48,6 +48,9 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
       ```
       helm install prometheus-adapter prometheus-community/prometheus-adapter  -f ./ggs-ingress/prometheus-adapter/values.yaml
       ```
+      **Note:** prometheus-adapter versions 3.0.1 to 3.0.3 don't honor Horizontal Pod Autoscaling. (For more details, please refer to this [issue](https://github.com/prometheus-community/helm-charts/issues/1739)). You can install specific version of prometheus-adapter for horizontal pod autoscaling feature using `--version` flag.  
+   
+
    3. Install the NGINX Ingress Controller by executing this command:
         
       ```
