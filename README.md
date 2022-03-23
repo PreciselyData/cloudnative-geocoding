@@ -43,14 +43,14 @@ The diagrams in this section illustrate the architecture of the Geocoding applic
 
 The configured cluster includes:
 
--   a minimum of two worker nodes
+-   A minimum of two worker nodes
 -   [NGINX](https://www.nginx.com/) for ingress monitoring and metrics
 -   [Prometheus](https://prometheus.io/) for metrics collection
 -   [Prometheus-Adapter](https://github.com/DirectXMan12/k8s-prometheus-adapter) for serving custom metrics
 -   Horizontal Pod Autoscaler \(HPA\)
 -   Kubernetes Cluster Autoscaler
 -   Geocoding reference data installed locally or on cloud-hosted storage
--   the deployed Geocoding application
+-   The deployed Geocoding application
 
 **Note:** Since cloud environments may have individual corporate requirements for naming conventions, security, and components, some adjustments will most likely be necessary.
 

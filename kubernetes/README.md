@@ -5,12 +5,12 @@ This guide provides detailed instructions for deploying the sample Spectrum Oper
 To deploy the Geocoding application in a Kubernetes environment, install the following client tools that are applicable to your environment:
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [Helm 3](https://helm.sh/docs/intro/install/)
-##### Amazon EKS
+##### Amazon Elastic Kubernetes Service (EKS)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 - [eksctl](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html)
-##### Google GKE
+##### Google Kubernetes Engine (GKE)
 - [Google Cloud SDK](https://cloud.google.com/sdk/install)
-##### Microsoft AKS
+##### Microsoft Azure Kubernetes Service (AKS)
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
 ## Deploy the Geocoding application Docker image
@@ -83,7 +83,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 
 ## Update credentials in Kubernetes secret
 
-This is required to access .spd files from cloud storage. Place all credentials related information in the `./ggs/ggs-storage-secrets` folder.  Update the `./ggs/ggs-storage-secrets/rclone.conf` file with the appropriate configuration.  This file is already populated with simple configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account JSON files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/usr/local/ggs-storage-secrets`.
+This is required to access .spd files from cloud storage. Place all credentials related information in the `./ggs/ggs-storage-secrets` folder.  Update the `./ggs/ggs-storage-secrets/rclone.conf` file with the appropriate configuration.  This file is already populated with sample configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account JSON files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/usr/local/ggs-storage-secrets`.
 
 ##### Amazon [S3](https://aws.amazon.com/s3/)
 
@@ -131,7 +131,7 @@ These resources will be described the same across all Kubernetes platforms.
 
 To modify the geocoder default preferences, see the `ggs/geocode-preferences-cm.yaml` file for descriptions of the configuration parameters.
 
-Execute these commands:   
+Run these commands:   
    ```
    kubectl apply -f ./ggs/geocode-preferences-cm.yaml    
    kubectl apply -f ./ggs/ggs-dataprep-cm.yaml 
