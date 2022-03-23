@@ -13,7 +13,7 @@ This sample requires Docker Engine to build the image.
 
 ## Setup instructions
 1. If you haven't already, clone or download this repository to your computer.
-2.  Place your OAS distribution into the `{project}/lib` directory and execute:
+2.  Place your OAS distribution into the `{project}/lib` directory and run:
         
         gradlew extractGGSDist
 
@@ -24,8 +24,8 @@ This sample requires Docker Engine to build the image.
 
 ## Build the sample application
 The sample is bundled with a gradle build script to help build, test, and package the project. There are several tasks associated with local development that can be helpful:
-* Unit tests can be executed using: `gradlew test`
-* The web service can be executed locally using: `gradlew bootRun` after which the service can be accessed locally with a URL, such as: http://localhost:8080/addressing/predict/usa?input=350%20jordan 
+* Unit tests can be run using: `gradlew test`
+* The web service can be run locally using: `gradlew bootRun` after which the service can be accessed locally with a URL, such as: http://localhost:8080/addressing/predict/usa?input=350%20jordan 
     
 
   Your service is ready to access when you see the following console message after executing `gradlew bootRun`:

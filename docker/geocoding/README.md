@@ -8,9 +8,9 @@ This sample requires Docker Engine to build the image.
    * [Docker Engine](https://docs.docker.com/engine/install/)
 
 The image can be pushed to and stored in a cloud registry. Depending on the registry you publish to, determines the tool that you need to install. The Docker CLI is included in the Docker install, so a separate tool is not required for publishing images to Docker Hub.
-   * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) - for publishing to Amazon ECR.
-   * [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) - for publishing to Google GCR.
-   * [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - for publishing to Microsoft ACR.
+   * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) - for publishing to Amazon Elastic Container Registry (ECR).
+   * [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) - for publishing to Google Container Registry (GCR).
+   * [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - for publishing to Microsoft Azure Container Registry (ACR).
 
  ### Download the SDK & data
    * Spectrum Operational Addressing SDK (OAS) distribution - For information about OAS, see the [Precisely Support](https://support.precisely.com/) site and the [Operational Addressing SDK Developer Guide](https://docs.precisely.com/docs/sftw/ggs/5.0/en/webhelp/index.html#GlobalGeocodingGuide/source/LandingPageForHelp_GGS.html) documentation.
@@ -21,13 +21,13 @@ The geocoding Docker sample contains a [Dockerfile](Dockerfile) along with start
 
 1. If you haven't already, clone or download this repository to your computer. 
 2. Extract Spectrum Operational Addressing SDK (OAS) distribution's zip in `<sample-directory>/docker/geocoding/ggs` directory.
-3. Build & push the Docker image by executing the following command from the `<sample-directory>/docker/geocoding` directory, where: 
+3. Build & push the Docker image by running the following command from the `<sample-directory>/docker/geocoding` directory, where: 
    - `-t [IMAGE]` - image name or ID, and optionally a tag in the ‘name:tag’ format
 	  
    ```
    docker build -t [IMAGE] .
    ```
-4. Verify the image built successfully and is stored in the local repository. Your image should be listed after executing the following command:
+4. Verify the image built successfully and is stored in the local repository. Your image should be listed after running the following command:
    ```
    docker image ls
    ```

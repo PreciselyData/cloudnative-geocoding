@@ -26,14 +26,14 @@ Before running the `eksctl` command, make sure that you have authenticated to AW
 ```
 aws configure
 ```
-Create the cluster and autoscaler by executing the following commands:
+Create the cluster and autoscaler by running the following commands:
 ```
 eksctl create cluster -f create-eks-cluster.yaml
 kubectl apply -f cluster-autoscaler.yaml
 ```
 
 ### Verify the cluster 
-To verify that your cluster was created successfully, and your kubectl client is pointing to the cluster, execute this command:
+To verify that your cluster was created successfully, and your kubectl client is pointing to the cluster, run this command:
 
 ```
 kubectl cluster-info

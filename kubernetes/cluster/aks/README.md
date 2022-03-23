@@ -23,7 +23,7 @@ Azure CLI supports multiple authentication methods; use any authentication metho
 az login 
 ``` 
 
-If your Azure account has multiple subscription IDs than set one ID as default subscription ID, that will be used for all `azure CLI` commands, otherwise you will have to provide this subscription ID in each command.
+If your Azure account has multiple subscription IDs then set one ID as default subscription ID, that will be used for all `azure CLI` commands, otherwise you will have to provide this subscription ID in each command.
 ```
 az account set --subscription "@SUBSCRIPTION_ID@"
 ```
@@ -51,7 +51,7 @@ az aks get-credentials --name oassample
 For more information about the `kubectl` configuration, refer to [Microsoft's documentation](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough).
 
 ### Verify the cluster 
-To verify that your cluster was created successfully, and your kubectl client is pointing to the cluster, execute this command:
+To verify that your cluster was created successfully, and your kubectl client is pointing to the cluster, run this command:
 
 ```
 kubectl cluster-info

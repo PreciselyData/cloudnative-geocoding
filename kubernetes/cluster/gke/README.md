@@ -20,7 +20,7 @@ For more details about IAM roles and permissions, see Google's [documentation](h
 Before starting the following steps, make sure you have installed the required tools listed in [Install client tools](../../README.md).	
 
 ### Authenticate and configure gcloud
-Replace the `@KEY_FILE@` parameter with the absolute path to your service account key file, and execute the command below. For more options for authentication, refer to the [Google Cloud documentation](https://cloud.google.com/sdk/gcloud/reference/auth).
+Replace the `@KEY_FILE@` parameter with the absolute path to your service account key file, and run the command below. For more options for authentication, refer to the [Google Cloud documentation](https://cloud.google.com/sdk/gcloud/reference/auth).
 ``` 
 gcloud auth activate-service-account  --key-file=@KEY_FILE@ 
 ``` 
@@ -41,7 +41,7 @@ gcloud container node-pools create ingress-pool --cluster oas-sample --machine-t
 ``` 
 
 ### Verify the cluster 
-To verify that your cluster was created successfully, and your kubectl client is pointing to the cluster, execute this command:
+To verify that your cluster was created successfully, and your kubectl client is pointing to the cluster, run this command:
 
 ```
 kubectl cluster-info
