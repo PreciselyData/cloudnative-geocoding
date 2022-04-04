@@ -123,9 +123,15 @@ This docker command consists of:
 
 The memory requirement may need to be adjusted as datasets are added to the geocoder. 
 
-A general recommendation for minimum heap size is:
-   - 1-2 datasets - 2 GB
-   - 3 or more datasets - 8 GB 
+The main process where an Operational Addressing SDK (OAS) instance is created should have at least 24 GB of memory available for reasonable performance. OAS also creates sub-processes for running native code which requires additional memory. By default, it runs 5 additional processes, each requiring an additional 1 GB of memory.
+
+- If you are using only **1 to 2 datasets** or countries, **8 - 12 GB memory** should suffice for optimal performance.
+
+  - Required minimum heap size 2 GB **"-Xms2048m"**.
+- If you are using **more than 2 datasets** or countries, review your minimum heap size setting for the main process. At least 8 GB of heap memory is needed to speed up initialization and prevent out of memory exceptions.
+
+  - Required minimum heap size 8 GB **"-Xms8192m"**.
+
 ```
 docker run -p 8080:8080 -v <sample-directory>/docker/geocoding/ggs_data:/usr/local/ggs/data  -e GGS_DATA=/usr/local/ggs/data -e CATALINA_OPTS='-Xmx10g -Xms10g -XX:MaxPermSize=1024m' [IMAGE ID]
 ```
