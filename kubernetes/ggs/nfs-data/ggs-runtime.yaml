@@ -30,8 +30,8 @@ spec:
               name: http
           resources:
             requests:
-              cpu: 6
-              memory: 20Gi
+              cpu: 3
+              memory: 14Gi
           volumeMounts:
             - name: ggs-data
               mountPath: /usr/local/ggs-data
