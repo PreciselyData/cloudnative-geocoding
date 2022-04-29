@@ -9,7 +9,7 @@ availabilityZones: ["us-east-1d", "us-east-1f"]
       
 managedNodeGroups:
   - name: "ggs-sample-worker"
-    instanceType: "m5.xlarge"
+    instanceType: "m5.2xlarge"
     iam:
       attachPolicyARNs:
         - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
