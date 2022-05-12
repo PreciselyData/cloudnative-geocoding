@@ -34,7 +34,7 @@ spec:
               memory: 7Gi
           volumeMounts:
             - name: ggs-data
-              mountPath: /mnt/data/ggs-data
+              mountPath: /usr/local/ggs-data
 #            - name: config-preferences
 #              mountPath: /usr/local/ggs-preferences/geocodePreferences.xml
 #              subPath: geocodePreferences.xml
@@ -56,7 +56,7 @@ spec:
             periodSeconds: 60
           env:
             - name: DATA_PATH
-              value: /mnt/data/ggs-data
+              value: /usr/local/ggs-data
 #            - name: GGS_PREFERENCES
 #              value: /usr/local/ggs-preferences/geocodePreferences.xml
 #            - name: _GEOSTAN_JOURNAL_FILE
