@@ -30,7 +30,7 @@ spec:
               name: http
           resources:
             requests:
-              cpu: 3
+              cpu: 1
               memory: 7Gi
           volumeMounts:
             - name: ggs-data
@@ -72,5 +72,4 @@ spec:
                   resource: limits.cpu
           imagePullPolicy: IfNotPresent
       nodeSelector:
-#        node-app: ggs
-        node-app: regional-addressing
+        node-app: ggs
