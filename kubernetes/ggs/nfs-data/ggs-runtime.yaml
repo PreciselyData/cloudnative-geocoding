@@ -40,7 +40,7 @@ spec:
               subPath: geocodePreferences.xml
           readinessProbe:
             httpGet:
-              path: /geocode/rest/GeocodeService/geocode
+              path: /health
               port: http
             initialDelaySeconds: 20
             failureThreshold: 60
@@ -48,7 +48,7 @@ spec:
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /geocode/rest/GeocodeService/geocode
+              path: /health
               port: http
             initialDelaySeconds: 60
             failureThreshold: 60
@@ -72,5 +72,5 @@ spec:
                   resource: limits.cpu
           imagePullPolicy: IfNotPresent
       nodeSelector:
-        node-app: ggs
-
+#        node-app: ggs
+        node-app: regional-addressing
