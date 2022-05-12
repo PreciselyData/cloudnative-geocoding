@@ -57,17 +57,17 @@ spec:
           env:
             - name: DATA_PATH
               value: /usr/local/ggs-data
-#            - name: GGS_PREFERENCES
-#              value: /usr/local/ggs-preferences/geocodePreferences.xml
-#            - name: _GEOSTAN_JOURNAL_FILE
-#              value: $(GGS_DATA)/geostan.txt
-#            - name: JAVA_OPTS
-#              value: "-Xmx12G"
-#            - name: POD_CPU_LIMIT
-#              valueFrom:
-#                resourceFieldRef:
-#                  containerName: ggs-container
-#                  resource: limits.cpu
+            - name: GGS_PREFERENCES
+              value: /usr/local/ggs-preferences/geocodePreferences.xml
+            - name: _GEOSTAN_JOURNAL_FILE
+              value: $(GGS_DATA)/geostan.txt
+            - name: JAVA_OPTS
+              value: "-Xmx12G"
+            - name: POD_CPU_LIMIT
+              valueFrom:
+                resourceFieldRef:
+                  containerName: ggs-container
+                  resource: limits.cpu
           imagePullPolicy: IfNotPresent
       nodeSelector:
         node-app: ggs
