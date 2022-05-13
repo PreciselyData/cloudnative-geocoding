@@ -32,6 +32,9 @@ spec:
             requests:
               cpu: 1
               memory: 7Gi
+            limits:
+              cpu: 1
+              memory: 7Gi
           volumeMounts:
             - name: ggs-data
               mountPath: /usr/local/ggs-data
