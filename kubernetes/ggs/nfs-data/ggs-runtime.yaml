@@ -64,7 +64,7 @@ spec:
             - name: _GEOSTAN_JOURNAL_FILE
               value: $(GGS_DATA)/geostan.txt
             - name: JAVA_OPTS
-              value: "-Xmx12G"
+              value: "-Xmx8G"
             - name: POD_CPU_LIMIT
               valueFrom:
                 resourceFieldRef:
