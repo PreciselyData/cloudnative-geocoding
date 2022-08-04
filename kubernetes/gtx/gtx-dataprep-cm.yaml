@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gtx-dataprep-script
+  labels:
+    app: gtx
+data:
+  install.sh: |
+    #!/bin/bash
+
+    DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+    rm -rf $GTX_DATA/*
+    LOCAL_ZIP_DIR=/usr/local/gtx/gtx-zip
+    mkdir -p $LOCAL_ZIP_DIR
+    
+    #copy rclone.conf to make it writable (docs say this is necessary in some cases of token based auth usage)
+    mkdir /usr/local/rclone-conf
+    cp /usr/local/gtx-storage-secrets/rclone.conf /usr/local/rclone-conf
+    chmod -R u+w /usr/local/rclone-conf
+    
+    # copy spds locally 
+    xargs -P 4 -I {spd} -a $SPD_LIST/spd.list rclone copy {spd} $LOCAL_ZIP_DIR --config /usr/local/rclone-conf/rclone.conf --error-on-no-transfer --verbose
+        
+    # create destination directory and extract datasets
+    mkdir -p $GTX_DATA
+    unzip $LOCAL_ZIP_DIR/*.spd -d $GTX_DATA
+
+    # clean up
+    rm -rf $LOCAL_ZIP_DIR

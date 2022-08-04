@@ -1,0 +1,82 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: gtx
+  labels:
+    app: gtx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gtx
+  template:
+    metadata:
+      labels:
+        app: gtx
+    spec:
+      volumes:
+      - name: gtx-data
+        emptyDir: {}
+      - name: config-dataprep
+        configMap:
+          name: gtx-dataprep-script
+      - name: config-datasets
+        configMap:
+          name: gtx-datasets
+      - name: gtx-storage-secrets
+        secret:
+          secretName: gtx-storage-secrets
+      initContainers:
+      - name: gtx-dataprep-container
+        image: @IMAGE_URI@
+        command: ["/bin/sh"]
+        args: ["/usr/local/gtx-dataprep/install.sh"]
+        volumeMounts:
+        - name: gtx-data
+          mountPath: /usr/local/gtx-data
+        - name: config-dataprep
+          mountPath: /usr/local/gtx-dataprep
+        - name: config-datasets
+          mountPath: /usr/local/gtx-datasets
+        - name: gtx-storage-secrets
+          mountPath: /usr/local/gtx-storage-secrets
+        resources:
+          requests:
+#           TODO -resource request to be updated
+            cpu: 6
+            memory: 20Gi
+        env:
+        - name: GTX_DATA
+          value: /usr/local/gtx-data
+        - name: SPD_LIST
+          value: /usr/local/gtx-datasets
+      containers:
+      - name: gtx-container
+        image: @IMAGE_URI@
+        ports:
+        - containerPort: 8080
+          name: http
+        volumeMounts:
+        - name: gtx-data
+          mountPath: /usr/local/gtx-data
+
+        - name: config-dataprep
+          mountPath: /usr/local/gtx-dataprep
+        resources:
+          requests:
+            cpu: 6
+            memory: 20Gi
+        env:
+        - name: GTX_DATA
+          value: /usr/local/gtx-data
+#         TODO -need GEOSTAN resource details
+        - name: _GEOSTAN_JOURNAL_FILE
+          value: $(GTX_DATA)/geostan.txt
+        - name: POD_CPU_LIMIT
+          valueFrom:
+             resourceFieldRef:
+                containerName: gtx-container
+                resource: limits.cpu          
+      nodeSelector:
+        node-app: gtx

@@ -1,8 +1,0 @@
-*
-!ggs/webapp
-!ggs/cli
-!ggs/resources/config
-!ggs/resources/lib
-!ggs/resources/bin/linux64
-!ggs/resources/application.properties
-!deploy-ggs.sh

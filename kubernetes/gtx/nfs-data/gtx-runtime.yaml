@@ -1,0 +1,67 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: gtx
+  labels:
+    app: gtx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gtx
+  template:
+    metadata:
+      labels:
+        app: gtx
+    spec:
+      volumes:
+        - name: gtx-data
+          persistentVolumeClaim:
+            claimName: gtx-data-pvc
+      containers:
+        - name: gtx-container
+          image: @IMAGE_URI@
+          ports:
+            - containerPort: 8080
+              name: http
+          resources:
+            requests:
+#             TODO -resource request to be updated
+              cpu: 6
+              memory: 20Gi
+          volumeMounts:
+            - name: gtx-data
+              mountPath: /usr/local/gtx-data
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 20
+            failureThreshold: 60
+            timeoutSeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 60
+            failureThreshold: 60
+            timeoutSeconds: 10
+            periodSeconds: 60
+          env:
+            - name: GTX_DATA
+              value: /usr/local/gtx-data
+            - name: _GEOSTAN_JOURNAL_FILE
+              value: $(GTX_DATA)/geostan.txt
+            - name: JAVA_OPTS
+              value: "-Xmx12G"
+            - name: POD_CPU_LIMIT
+              valueFrom:
+                resourceFieldRef:
+                  containerName: gtx-container
+                  resource: limits.cpu
+          imagePullPolicy: IfNotPresent
+      nodeSelector:
+        node-app: gtx
+

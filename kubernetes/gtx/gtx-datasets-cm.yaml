@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gtx-datasets
+  labels:
+    app: gtx
+data:
+  spd.list : |
+    @GTX_DATASETS@

@@ -1,34 +1,24 @@
-# Geocoding Application for Kubernetes Deployment Guide
-This guide provides detailed instructions for deploying the sample Spectrum Operational Addressing API in a Kubernetes environment.
+# Geotax Application for Kubernetes Deployment Guide
+This guide provides detailed instructions for deploying the sample Geotax API in a Kubernetes environment.
 
 ## Install client tools
-To deploy the Geocoding application in a Kubernetes environment, install the following client tools that are applicable to your environment:
+To deploy the Geotax application in a Kubernetes environment, install the following client tools that are applicable to your environment:
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [Helm 3](https://helm.sh/docs/intro/install/)
 ##### Amazon Elastic Kubernetes Service (EKS)
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 - [eksctl](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html)
-##### Google Kubernetes Engine (GKE)
-- [Google Cloud SDK](https://cloud.google.com/sdk/install)
-##### Microsoft Azure Kubernetes Service (AKS)
-- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
-## Deploy the Geocoding application Docker image
-The Geocoding application is packaged as a Docker image and should be deployed to an accessible container registry, such as [Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/Registries.html) for [EKS](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html), or on [Google GCR](https://cloud.google.com/container-registry) for [GKE](https://cloud.google.com/kubernetes-engine), or on [Azure ACR](https://azure.microsoft.com/en-in/services/container-registry/) for [AKS](https://azure.microsoft.com/en-in/services/kubernetes-service/).
+## Deploy the Geotax application Docker image
+The Geotax application is packaged as a Docker image and should be deployed to an accessible container registry, such as [Amazon ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/Registries.html) for [EKS](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html).
 
-To build the Docker image, use one of the following methods:
-- To build using the provided Spectrum Operational Addressing REST APIs, see [docker/geocoding](../docker/geocoding)
-- To build a custom application using Spectrum Operational Addressing Java SDK, see [docker/geocoding-custom](../docker/geocoding-custom)
+To build using the provided Geotax REST APIs, see [docker/geotax](../docker/geotax)
 
 ## Create the Kubernetes cluster
-The sample geocoding application requires a Kubernetes cluster with at least one node to run the Geocoding application and a separate node for the NGINX ingress controller. This sample cluster will scale the number of nodes available for running the Geocoding application up to a maximum of 10, based on user load.
+The sample geotax application requires a Kubernetes cluster with at least one node to run the Geotax application and a separate node for the NGINX ingress controller. This sample cluster will scale the number of nodes available for running the Geotax application up to a maximum of 10, based on user load.
 
 ##### Amazon EKS
 >To create an Amazon EKS cluster, follow the instructions in [README.md](./cluster/eks/README.md). 
-##### Google GKE
->To create a Google GKE cluster, follow the instructions in [README.md](./cluster/gke/README.md).
-##### Microsoft AKS
->To create a Microsoft AKS cluster, follow the instructions in [README.md](./cluster/aks/README.md).
 
 ## Configure Helm
 Add the required Helm chart repositories. These repositories will be used to deploy components in the cluster:
@@ -37,7 +27,7 @@ helm repo add stable https://charts.helm.sh/stable
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 ```
 ## Deploy the NGINX Ingress Controller and Prometheus-Adapter with Prometheus
-   The Geocoding application uses the NGINX Ingress Controller as a load balancer in order to monitor the number of active users. In addition,  Prometheus-Adapter is installed along with Prometheus Server in order to provide this data as custom metrics in Kubernetes, which the Geocoding application uses to autoscale. 
+   The Geotax application uses the NGINX Ingress Controller as a load balancer in order to monitor the number of active users. In addition,  Prometheus-Adapter is installed along with Prometheus Server in order to provide this data as custom metrics in Kubernetes, which the Geotax application uses to autoscale. 
    1. Install Prometheus Server using Helm:      
       ```
       helm install prometheus prometheus-community/prometheus
@@ -46,7 +36,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
    2. Install Prometheus-Adapter using Helm:
       
       ```
-      helm install prometheus-adapter prometheus-community/prometheus-adapter  -f ./ggs-ingress/prometheus-adapter/values.yaml
+      helm install prometheus-adapter prometheus-community/prometheus-adapter  -f ./gtx-ingress/prometheus-adapter/values.yaml
       ```
       **Note:** prometheus-adapter versions 3.0.1 to 3.0.3 don't honor Horizontal Pod Autoscaling. (For more details, please refer to this [issue](https://github.com/prometheus-community/helm-charts/issues/1739)). You can install specific version of prometheus-adapter for horizontal pod autoscaling feature using `--version` flag.  
    
@@ -55,7 +45,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
         
       ```
       helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-      helm install nginx-ingress ingress-nginx/ingress-nginx -f ./ggs-ingress/nginx-ingress-controller/values.yaml 
+      helm install nginx-ingress ingress-nginx/ingress-nginx -f ./gtx-ingress/nginx-ingress-controller/values.yaml 
       ```
       
       Wait for all pods to come up in a running state; it generally takes 2 to 5 minutes.
@@ -83,7 +73,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 
 ## Update credentials in Kubernetes secret
 
-This is required to access .spd files from cloud storage. Place all credentials related information in the `./ggs/ggs-storage-secrets` folder.  Update the `./ggs/ggs-storage-secrets/rclone.conf` file with the appropriate configuration.  This file is already populated with sample configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account JSON files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/usr/local/ggs-storage-secrets`.
+This is required to access .spd files from cloud storage. Place all credentials related information in the `./gtx/gtx-storage-secrets` folder.  Update the `./gtx/gtx-storage-secrets/rclone.conf` file with the appropriate configuration.  This file is already populated with sample configurations and placeholders for key information.  If there are supporting files needed for configuration, like service account JSON files, they should also be placed in this folder.  This folder will be mounted to the data preparation container at `/usr/local/gtx-storage-secrets`.
 
 ##### Amazon [S3](https://aws.amazon.com/s3/)
 
@@ -91,107 +81,88 @@ This is required to access .spd files from cloud storage. Place all credentials 
     - `AWS_ACCESS_KEY_ID` - s3 access key
     - `AWS_SECRET_ACCESS_KEY`  - s3 secret key
     - `AWS_DEFAULT_REGION` - s3 region
-  
-##### Google [Cloud Storage](https://cloud.google.com/storage)
-- The example `rclone.conf` for Google Storage assumes the usage of a service account.  Place the Google service account json file in the `./ggs/ggs-storage-secrets` folder and update the file name in the `./ggs/ggs-storage-secrets/rclone.conf` file.
-  
-##### Microsoft [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/)
-- Provide your Azure Blob storage account's name and key
-    - `AZURE_REFERENCE_DATA_STORAGE_ACCOUNT` - storage account's name
-    - `AZURE_REFERENCE_DATA_STORAGE_ACCOUNT_KEY`  - storage account's key
-
-**Note:** To create this secret from Azure Key Vault, you can follow Microsoft's documentations for [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes)
-
+    
 After updating credentials, create the Kubernetes secret for the cluster:
 ```
-kubectl create secret generic ggs-storage-secrets --from-file=./ggs/ggs-storage-secrets
+kubectl create secret generic gtx-storage-secrets --from-file=./gtx/gtx-storage-secrets
 ``` 
 
 ## Configure the reference datasets
-The Geocoding application requires geocoding reference datasets, which are .spd files that must be available on [S3](https://aws.amazon.com/s3/) for EKS, [Google Storage](https://cloud.google.com/storage/docs/creating-buckets) for GKE, or [Azure Blob Storage](https://azure.microsoft.com/en-in/services/storage/blobs/) for Microsoft AKS. The datasets will be accessed from the `./ggs/ggs-datasets-cm.yaml` config map.
+The Geotax application requires geotax reference datasets, which are .spd files that must be available on [S3](https://aws.amazon.com/s3/) for EKS. The datasets will be accessed from the `./gtx/gtx-datasets-cm.yaml` config map.
 
 * If you have not already downloaded the reference data, for information about Precisely's data portfolio, see the [Precisely Data Guide](https://dataguide.precisely.com/) where you can also sign up for a free account and access sample data available in [Precisely Data Experience](https://data.precisely.com/).
 
-In the `./ggs/ggs-datasets-cm.yaml` file, specify the rclone path of each dataset file kept on cloud storage in the `spd.list` parameter.
+In the `./gtx/gtx-datasets-cm.yaml` file, specify the rclone path of each dataset file kept on cloud storage in the `spd.list` parameter.
           
-Example using the azure configuration:
+Example using the AWS configuration:
 ```
   spd.list : |
-    az:com-precisely-geocoding/data/2020.12/GCM-WORLD-STREET-WBL-112-202012-INTERACTIVE.spd
-    az:com-precisely-geocoding/data/2020.12/EGM-WORLD-STREET-WBL-112-202012-GEOCODING.spd
+    s3://com.pb.geotax/test/GPM062022.spd
 ```
 
 Deploy the datasets manifest script:
 ```
-kubectl apply -f ./ggs/ggs-datasets-cm.yaml
+kubectl apply -f ./gtx/gtx-datasets-cm.yaml
 ``` 
 
-## Deploy the geocoder default preferences and shared resources
+## Deploy the shared resources
 These resources will be described the same across all Kubernetes platforms.
 
-To modify the geocoder default preferences, see the `ggs/geocode-preferences-cm.yaml` file for descriptions of the configuration parameters.
-
 Run these commands:   
-   ```
-   kubectl apply -f ./ggs/geocode-preferences-cm.yaml    
-   kubectl apply -f ./ggs/ggs-dataprep-cm.yaml 
-   kubectl apply -f ./ggs/ggs-service.yaml
-   kubectl apply -f ./ggs-ingress/ggs-ingress-resource.yaml 
-   kubectl apply -f ./ggs/ggs-hpa.yaml  
+   ```  
+   kubectl apply -f ./gtx/gtx-dataprep-cm.yaml 
+   kubectl apply -f ./gtx/gtx-service.yaml
+   kubectl apply -f ./gtx-ingress/gtx-ingress-resource.yaml 
+   kubectl apply -f ./gtx/gtx-hpa.yaml  
    ```
 
-## Deploy the Geocoding application
-Spectrum Operational Addressing SDK requires the reference data to be available on the file system of the pod running the geocoding service. Due to the size of the reference data, the data is managed outside of the docker image and configured during deployment. Two options for configuring the reference data are provided:
+## Deploy the Geotax application
+Geotax SDK requires the reference data to be available on the file system of the pod running the geotax service. Due to the size of the reference data, the data is managed outside of the docker image and configured during deployment. Two options for configuring the reference data are provided:
 
 - Option A: The reference data is initialized on an [emptyDir volume](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
 - Option B: The reference data is initialized on a [persistent volume](https://kubernetes.io/docs/concepts/storage/volumes/#nfs)
 
 #### Option A: Reference data is initialized on an emptyDir volume
-This is the simplest approach to deploy the Geocoding application. During startup, a geocoding pod copies the data from Cloud Storage (S3 or GS or AFS) to an emptyDir volume that's mounted to a local directory.
+This is the simplest approach to deploy the Geotax application. During startup, a geotax pod copies the data from Cloud Storage (S3) to an emptyDir volume that's mounted to a local directory.
 
-**Note**: Each new geocoding pod copies the data from the storage bucket to the local directory. This increases the pod startup time, so this approach may not be appropriate for production usage where faster startup time is required.
+**Note**: Each new geotax pod copies the data from the storage bucket to the local directory. This increases the pod startup time, so this approach may not be appropriate for production usage where faster startup time is required.
 
 Steps to deploy:
 
-  1. Add the Geocoding application Docker image URI.
+  1. Add the Geotax application Docker image URI.
      
-     For this, move to the `./ggs/local-data/ggs-runtime.yaml` file and replace:
-     - `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the Docker repository in the `image` parameter. The `@IMAGE_URI@` parameter needs to be replaced in two places.
+     For this, move to the `./gtx/local-data/gtx-runtime.yaml` file and replace:
+     - `@IMAGE_URI@` - the URI of the Geotax application Docker image stored in the Docker repository in the `image` parameter. The `@IMAGE_URI@` parameter needs to be replaced in two places.
       ```
           initContainers:
-             - name: ggs-dataprep-container
+             - name: gtx-dataprep-container
                image: @IMAGE_URI@
        ```
        and
        ```
              containers:
-               - name: ggs-container
+               - name: gtx-container
                  image: @IMAGE_URI@
        ```  
  
-  2. Deploy the Geocoding application runtime: 
+  2. Deploy the Geotax application runtime: 
      
      ```
-       kubectl apply -f ./ggs/local-data/ggs-runtime.yaml
+       kubectl apply -f ./gtx/local-data/gtx-runtime.yaml
      ``` 
 #### Option B: Reference data is initialized on a persistent volume
-This approach minimizes pod startup time by preparing the reference data ahead of deployment on a shared persistent volume.  The deployment of the geocoding data using a persistent volume is a 2-step process:
+This approach minimizes pod startup time by preparing the reference data ahead of deployment on a shared persistent volume.  The deployment of the geotax data using a persistent volume is a 2-step process:
 
   1. Configure the persistent volume with reference data.
-  2. Deploy the geocoding application using the data from the persistent volume.
+  2. Deploy the geotax application using the data from the persistent volume.
 
  #### 1. Configure the persistent volume with reference data
- This sample demonstrates configuring a persistent volume backed by high performance cloud based file storage.  Though the steps outlined are written for specific products (`Amazon EFS`, `Google Filestore`, `Azure Files`), the process is generally applicable for other persistent volume types as well. Follow the steps below based on your platform.
+ This sample demonstrates configuring a persistent volume backed by high performance cloud based file storage.  Though the steps outlined are written for specific products (`Amazon EFS`), the process is generally applicable for other persistent volume types as well. Follow the steps below based on your platform.
  ##### Amazon EKS
- >To deploy the geocoding reference data using [Amazon Elastic File System](https://aws.amazon.com/efs/), follow the instructions in [AmazonEKSReferenceData.md](./ggs/nfs-data/AmazonEKSReferenceData.md). 
- ##### Google GKE
- >To deploy the geocoding reference data on [Google Filestore](https://cloud.google.com/filestore), follow the instructions in [GoogleGKEReferenceData.md](./ggs/nfs-data/GoogleGKEReferenceData.md).
-##### Microsoft AKS
->To deploy the geocoding reference data using [Microsoft Azure Files](https://azure.microsoft.com/en-in/services/storage/files/), follow the instructions in [MicrosoftAKSReferenceData.md](./ggs/nfs-data/MicrosoftAKSReferenceData.md).
+ >To deploy the geotax reference data using [Amazon Elastic File System](https://aws.amazon.com/efs/), follow the instructions in [AmazonEKSReferenceData.md](gtx/nfs-data/AmazonEKSReferenceData.md).
 
-
-#### 2. Deploy the geocoding application using the data from the persistent volume
-The Geocoding application uses the same persistent volume where you deployed the reference data in the previous step. 
+#### 2. Deploy the geotax application using the data from the persistent volume
+The Geotax application uses the same persistent volume where you deployed the reference data in the previous step. 
  To deploy the application:
  
    - Deploy the persistent volume:
@@ -199,35 +170,27 @@ The Geocoding application uses the same persistent volume where you deployed the
      **Note:** If you deployed the persistent volume in the previous step and have not deleted it, then it should be available. In that case, you can skip this step.
       ##### Amazon EKS
       ```
-      kubectl apply -f ./ggs/nfs-data/eks/ggs-data-pv.yaml
-      ```
-     ##### Google GKE
-      ```
-      kubectl apply -f ./ggs/nfs-data/gke/ggs-data-pv.yaml
-      ```
-     ##### Microsoft AKS
-      ```
-      kubectl apply -f ./ggs/nfs-data/aks/ggs-data-pv.yaml
+      kubectl apply -f ./gtx/nfs-data/eks/gtx-data-pv.yaml
       ```
 
-   - In the `./ggs/nfs-data/ggs-runtime.yaml` file, replace:
-     - `@IMAGE_URI@` - the URI of the Geocoding application Docker image stored in the Docker repository in the `image` parameter.
+   - In the `./gtx/nfs-data/gtx-runtime.yaml` file, replace:
+     - `@IMAGE_URI@` - the URI of the Geotax application Docker image stored in the Docker repository in the `image` parameter.
    
-   - Deploy the Geocoding application runtime:
+   - Deploy the Geotax application runtime:
      ```
-     kubectl apply -f ./ggs/nfs-data/ggs-runtime.yaml
+     kubectl apply -f ./gtx/nfs-data/gtx-runtime.yaml
      ``` 
-## Access the Geocoding application
-Once the above steps have completed, the Geocoding application is up and running. You can access the Geocoding services endpoints using a web browser. You can also use a Web Service invocation tool to access the REST service endpoints available in the application.
+## Access the Geotax application
+Once the above steps have completed, the Geotax application is up and running. You can access the Geotax services endpoints using a web browser. You can also use a Web Service invocation tool to access the REST service endpoints available in the application.
 
-Retrieve the Ingress service address which exposes the Geocoding application to the external world using this command:
+Retrieve the Ingress service address which exposes the Geotax application to the external world using this command:
               
   ```
-  kubectl  get services -o wide -w nginx-ingress-ingress-nginx-controller
+  kubectl get services -o wide -w nginx-ingress-ingress-nginx-controller
    ```
-Copy the External IP/URL and Port of the Ingress service, and then create the Geocoding application test page URL: 
+Copy the External IP/URL and Port of the Ingress service, and then create the Geotax application test page URL: 
               
-  `http://<External-IP>:<port>/geocode`                
+  `http://<External-IP>:<port>/`                
               
-  For example: `http://ac97c5928849311ea9e8602781e57924-913734340.us-east-1.elb.amazonaws.com/geocode`
+  For example: `http://ac97c5928849311ea9e8602781e57924-913734340.us-east-1.elb.amazonaws.com/`
 

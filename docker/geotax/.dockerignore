@@ -1,0 +1,9 @@
+*
+!gtx/*.war
+!gtx/webapp
+!gtx/cli
+!gtx/resources/config
+!gtx/resources/lib
+!gtx/resources/bin/linux64
+!gtx/resources/application.properties
+!deploy-gtx.sh

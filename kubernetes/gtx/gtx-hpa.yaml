@@ -1,0 +1,19 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gtx-hpa
+spec:
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: External
+    external:
+      metric:
+        name: nginx_active_connections
+      target:
+        type: AverageValue
+        averageValue: 12
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: gtx

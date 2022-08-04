@@ -1,0 +1,42 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: efs
+provisioner: efs.csi.aws.com
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gtx-data-pv
+  labels:
+    app: gtx
+spec:
+  capacity:
+    storage: 100G
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: "efs"
+  mountOptions:
+  - tls
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: @FILE_SYSTEM_ID@.efs.@REGION@.amazonaws.com
+    volumeAttributes:
+      path: /
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gtx-data-pvc
+  labels:
+    app: gtx
+spec:
+  storageClassName: "efs"
+  volumeName: gtx-data-pv
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100G

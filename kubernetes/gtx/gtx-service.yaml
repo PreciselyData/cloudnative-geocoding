@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gtx
+  labels:
+    app: gtx
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: http
+  selector:
+    app: gtx
+  type: ClusterIP

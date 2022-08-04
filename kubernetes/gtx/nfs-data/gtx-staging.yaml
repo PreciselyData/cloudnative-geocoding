@@ -1,0 +1,98 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: gtx-dataprep
+  labels:
+    app: gtx-dataprep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gtx-dataprep
+  template:
+    metadata:
+      labels:
+        app: gtx-dataprep
+    spec:
+      volumes:
+      - name: gtx-data
+        persistentVolumeClaim:
+          claimName: gtx-data-pvc
+#      - name: config-preferences
+#        configMap:
+#          name: gtx-preferences
+      - name: config-dataprep
+        configMap:
+          name: gtx-dataprep-script
+      - name: config-datasets
+        configMap:
+          name: gtx-datasets
+      - name: gtx-storage-secrets
+        secret:
+          secretName: gtx-storage-secrets
+      initContainers:
+      - name: gtx-dataprep-container
+        image: @IMAGE_URI@
+        command: ["/bin/sh"]
+        args: ["/usr/local/gtx-dataprep/install.sh"]
+        volumeMounts:
+        - name: gtx-data
+          mountPath: /usr/local/gtx-data
+        - name: config-dataprep
+          mountPath: /usr/local/gtx-dataprep
+        - name: config-datasets
+          mountPath: /usr/local/gtx-datasets
+        - name: gtx-storage-secrets
+          mountPath: /usr/local/gtx-storage-secrets
+        resources:
+          requests:
+            cpu: 1
+            memory: 4Gi
+        env:
+        - name: GTX_DATA
+          value: /usr/local/gtx-data
+        - name: SPD_LIST
+          value: /usr/local/gtx-datasets
+      containers:
+      - name: gtx-container
+        image: @IMAGE_URI@
+        ports:
+        - containerPort: 8080
+          name: http
+        volumeMounts:
+        - name: gtx-data
+          mountPath: /usr/local/gtx-data
+#        - name: config-preferences
+#          mountPath: /usr/local/gtx-preferences/geotaxPreferences.xml
+#          subPath: geotaxPreferences.xml
+        - name: config-dataprep
+          mountPath: /usr/local/gtx-dataprep
+        resources:
+          requests:
+            cpu: 1
+            memory: 4Gi
+        env:
+        - name: GTX_DATA
+          value: /usr/local/gtx-data
+#        - name: GTX_PREFERENCES
+#          value: /usr/local/gtx-preferences/geotaxPreferences.xml
+        - name: _GEOSTAN_JOURNAL_FILE
+          value: $(GTX_DATA)/geostan.txt
+      nodeSelector:
+        node-app: gtx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gtx-dataprep
+  labels:
+    app: gtx-dataprep
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: http
+  selector:
+    app: gtx-dataprep
+  type: LoadBalancer

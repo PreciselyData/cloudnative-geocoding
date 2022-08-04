@@ -2,13 +2,13 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: ggs-sample
+  name: gtx-sample
   region: us-east-1 
   
 availabilityZones: ["us-east-1d", "us-east-1f"] 
       
 managedNodeGroups:
-  - name: "ggs-sample-worker"
+  - name: "gtx-sample-worker"
     instanceType: "m5.2xlarge"
     iam:
       attachPolicyARNs:
@@ -33,11 +33,11 @@ managedNodeGroups:
     minSize: 1
     maxSize: 10
     volumeSize: 200
-    labels: { node-app: "ggs" }
+    labels: { node-app: "gtx" }
     tags:
       CreatedBy: "Precisely"
       
-  - name: "ggs-sample-ingress"
+  - name: "gtx-sample-ingress"
     instanceType: "m5.xlarge"
     iam:
       attachPolicyARNs:
