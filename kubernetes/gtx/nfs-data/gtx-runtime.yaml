@@ -29,7 +29,7 @@ spec:
             requests:
 #             TODO -resource request to be updated
               cpu: 6
-              memory: 30Gi
+              memory: 20Gi
           volumeMounts:
             - name: gtx-data
               mountPath: /usr/local/gtx-data
