@@ -24,7 +24,7 @@ data:
         
     # create destination directory and extract datasets
     mkdir -p $GTX_DATA
-    unzip $LOCAL_ZIP_DIR/*.zip -d $GTX_DATA
+    for z in $LOCAL_ZIP_DIR/*.zip; do unzip "$z" -d $GTX_DATA; done
 
     # clean up
     rm -rf $LOCAL_ZIP_DIR
