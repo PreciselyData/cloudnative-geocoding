@@ -44,8 +44,8 @@ spec:
         resources:
           requests:
 #           TODO -resource request to be updated
-            cpu: 6
-            memory: 20Gi
+            cpu: 2
+            memory: 8Gi
         env:
         - name: GTX_DATA
           value: /usr/local/gtx-data
@@ -65,8 +65,8 @@ spec:
           mountPath: /usr/local/gtx-dataprep
         resources:
           requests:
-            cpu: 6
-            memory: 20Gi
+            cpu: 2
+            memory: 8Gi
         env:
         - name: GTX_DATA
           value: /usr/local/gtx-data
