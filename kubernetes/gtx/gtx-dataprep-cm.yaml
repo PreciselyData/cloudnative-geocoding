@@ -28,11 +28,7 @@ data:
     #cp $LOCAL_ZIP_DIR $GTX_DATA
 
     mkdir -p $GTX_DATA
-<<<<<<< HEAD
     xargs -P 4 -I {spd} -a $SPD_LIST/spd.list rclone copy {spd} $GTX_DATA --config /usr/local/rclone-conf/rclone.conf --error-on-no-transfer --verbose
-=======
-    for z in $LOCAL_ZIP_DIR/*.zip; do unzip "$z" -d $GTX_DATA; done
->>>>>>> e0f286693a46fd79e1a1ad0c5e1af211ea01b150
 
     # clean up
     rm -rf $LOCAL_ZIP_DIR
