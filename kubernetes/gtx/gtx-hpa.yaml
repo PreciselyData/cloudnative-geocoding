@@ -19,7 +19,7 @@ spec:
       name: memory
       target:
         type: Utilization
-        averageUtilization: 10
+        averageUtilization: 20
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
