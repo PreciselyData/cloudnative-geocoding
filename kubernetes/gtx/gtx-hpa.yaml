@@ -5,21 +5,14 @@ metadata:
 spec:
   minReplicas: 1
   maxReplicas: 10
-#  metrics:
-#  - type: External
-#    external:
-#      metric:
-#        name: nginx_active_connections
-#      target:
-#        type: AverageValue
-#        averageValue: 10
   metrics:
-  - type: Resource
-    resource:
-      name: memory
+  - type: External
+    external:
+      metric:
+        name: nginx_active_connections
       target:
-        type: Utilization
-        averageUtilization: 20
+        type: AverageValue
+        averageValue: 10
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment

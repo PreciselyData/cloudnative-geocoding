@@ -31,7 +31,7 @@ managedNodeGroups:
         albIngress: true
         cloudWatch: true        
     minSize: 1
-    maxSize: 10
+    maxSize: 5
     volumeSize: 200
     labels: { node-app: "gtx" }
     tags:
