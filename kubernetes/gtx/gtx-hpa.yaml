@@ -3,7 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: gtx-hpa
 spec:
-  minReplicas: 1
+  minReplicas: 2
   maxReplicas: 10
   metrics:
   - type: External
